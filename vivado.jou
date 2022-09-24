@@ -2,13 +2,15 @@
 # Vivado v2019.1 (64-bit)
 # SW Build 2552052 on Fri May 24 14:49:42 MDT 2019
 # IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
-# Start of session at: Wed Sep 14 13:19:23 2022
-# Process ID: 17320
-# Current directory: C:/Users/Ilya/Desktop/MIET/Microprocessor_architecture/Lab_1
-# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent12880 C:\Users\Ilya\Desktop\MIET\Microprocessor_architecture\Lab_1\Lab_1.xpr
-# Log file: C:/Users/Ilya/Desktop/MIET/Microprocessor_architecture/Lab_1/vivado.log
-# Journal file: C:/Users/Ilya/Desktop/MIET/Microprocessor_architecture/Lab_1\vivado.jou
+# Start of session at: Sun Sep 25 02:21:23 2022
+# Process ID: 14760
+# Current directory: C:/Users/Ilya/Desktop/MIET/Architecture of processors/Lab_1_ALU
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent13096 C:\Users\Ilya\Desktop\MIET\Architecture of processors\Lab_1_ALU\Lab_1.xpr
+# Log file: C:/Users/Ilya/Desktop/MIET/Architecture of processors/Lab_1_ALU/vivado.log
+# Journal file: C:/Users/Ilya/Desktop/MIET/Architecture of processors/Lab_1_ALU\vivado.jou
 #-----------------------------------------------------------
 start_gui
-open_project C:/Users/Ilya/Desktop/MIET/Microprocessor_architecture/Lab_1/Lab_1.xpr
+open_project {C:/Users/Ilya/Desktop/MIET/Architecture of processors/Lab_1_ALU/Lab_1.xpr}
 update_compile_order -fileset sources_1
+update_compile_order -fileset sources_1
+set_property source_mgmt_mode DisplayOnly [current_project]

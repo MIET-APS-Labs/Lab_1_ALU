@@ -1,6 +1,6 @@
-webtalk_init -webtalk_dir C:/Users/Ilya/Desktop/MIET/Microprocessor_architecture/Lab_1/Lab_1.sim/sim_1/behav/xsim/xsim.dir/adder_testbench_behav/webtalk/
+webtalk_init -webtalk_dir C:/Users/Ilya/Desktop/MIET/Architecture of processors/Lab_1_ALU/Lab_1.sim/sim_1/behav/xsim/xsim.dir/SIMD_add_testbench_behav/webtalk/
 webtalk_register_client -client project
-webtalk_add_data -client project -key date_generated -value "Wed Sep 14 23:12:57 2022" -context "software_version_and_target_device"
+webtalk_add_data -client project -key date_generated -value "Sun Sep 25 01:36:00 2022" -context "software_version_and_target_device"
 webtalk_add_data -client project -key product_version -value "XSIM v2019.1 (64-bit)" -context "software_version_and_target_device"
 webtalk_add_data -client project -key build_version -value "2552052" -context "software_version_and_target_device"
 webtalk_add_data -client project -key os_platform -value "WIN64" -context "software_version_and_target_device"
@@ -14,7 +14,7 @@ webtalk_add_data -client project -key target_package -value "not_applicable" -co
 webtalk_add_data -client project -key target_speed -value "not_applicable" -context "software_version_and_target_device"
 webtalk_add_data -client project -key random_id -value "accdf859-9116-479e-80d6-c63788aa08f4" -context "software_version_and_target_device"
 webtalk_add_data -client project -key project_id -value "cf20695a47ca44548236dfb1a5edf446" -context "software_version_and_target_device"
-webtalk_add_data -client project -key project_iteration -value "36" -context "software_version_and_target_device"
+webtalk_add_data -client project -key project_iteration -value "34" -context "software_version_and_target_device"
 webtalk_add_data -client project -key os_name -value "Windows Server 2016 or Windows 10" -context "user_environment"
 webtalk_add_data -client project -key os_release -value "major release  (build 9200)" -context "user_environment"
 webtalk_add_data -client project -key cpu_name -value "Intel(R) Core(TM) i5-8265U CPU @ 1.60GHz" -context "user_environment"
@@ -26,7 +26,7 @@ webtalk_add_data -client xsim -key Command -value "xsim" -context "xsim\\command
 webtalk_add_data -client xsim -key trace_waveform -value "true" -context "xsim\\usage"
 webtalk_add_data -client xsim -key runtime -value "2410 ns" -context "xsim\\usage"
 webtalk_add_data -client xsim -key iteration -value "0" -context "xsim\\usage"
-webtalk_add_data -client xsim -key Simulation_Time -value "0.08_sec" -context "xsim\\usage"
-webtalk_add_data -client xsim -key Simulation_Memory -value "5928_KB" -context "xsim\\usage"
-webtalk_transmit -clientid 3832821179 -regid "" -xml C:/Users/Ilya/Desktop/MIET/Microprocessor_architecture/Lab_1/Lab_1.sim/sim_1/behav/xsim/xsim.dir/adder_testbench_behav/webtalk/usage_statistics_ext_xsim.xml -html C:/Users/Ilya/Desktop/MIET/Microprocessor_architecture/Lab_1/Lab_1.sim/sim_1/behav/xsim/xsim.dir/adder_testbench_behav/webtalk/usage_statistics_ext_xsim.html -wdm C:/Users/Ilya/Desktop/MIET/Microprocessor_architecture/Lab_1/Lab_1.sim/sim_1/behav/xsim/xsim.dir/adder_testbench_behav/webtalk/usage_statistics_ext_xsim.wdm -intro "<H3>XSIM Usage Report</H3><BR>"
+webtalk_add_data -client xsim -key Simulation_Time -value "0.09_sec" -context "xsim\\usage"
+webtalk_add_data -client xsim -key Simulation_Memory -value "6100_KB" -context "xsim\\usage"
+webtalk_transmit -clientid 2578401206 -regid "" -xml C:/Users/Ilya/Desktop/MIET/Architecture of processors/Lab_1_ALU/Lab_1.sim/sim_1/behav/xsim/xsim.dir/SIMD_add_testbench_behav/webtalk/usage_statistics_ext_xsim.xml -html C:/Users/Ilya/Desktop/MIET/Architecture of processors/Lab_1_ALU/Lab_1.sim/sim_1/behav/xsim/xsim.dir/SIMD_add_testbench_behav/webtalk/usage_statistics_ext_xsim.html -wdm C:/Users/Ilya/Desktop/MIET/Architecture of processors/Lab_1_ALU/Lab_1.sim/sim_1/behav/xsim/xsim.dir/SIMD_add_testbench_behav/webtalk/usage_statistics_ext_xsim.wdm -intro "<H3>XSIM Usage Report</H3><BR>"
 webtalk_terminate
