@@ -1,59 +1,46 @@
 `timescale 1ns / 1ps
+`include "defines.v"
+//////////////////////////////////////////////////////////////////////////////////
+// ALU based on RISC-V, extended with simple SIMD commands
+//////////////////////////////////////////////////////////////////////////////////
 
 
-`define ADD 5'b00000
-`define SUB 5'b01000
-`define SLL 5'b00001
-`define SLT 5'b00010
-`define SLTU 5'b00011
-`define XOR 5'b00100
-`define SRL 5'b00101
-`define SRA 5'b01101
-`define OR 5'b00110
-`define AND 5'b00111
-`define BEQ 5'b11000
-`define BNE 5'b11001
-`define BLT 5'b11100
-`define BGE 5'b11101
-`define BLTU 5'b11110
-`define BGEU 5'b11111
-
-//  SIMD Commands
-`define SIMD_ADD 5'b01001	
-`define SIMD_SUB 5'b01010	
-
-`define WORD_LEN 32
-
-
-module alu_riscv (
-    input wire [`WORD_LEN-1:0] A,
-    input wire [`WORD_LEN-1:0] B,
-    input wire [          4:0] ALUOp,
+module my_alu (
+    input wire [  `WORD_LEN-1:0] A,
+    input wire [  `WORD_LEN-1:0] B,
+    input wire [`ALU_OP_LEN-1:0] ALUOp,
 
     output reg Flag,
     output reg [`WORD_LEN-1:0] Result
 );
 
+  reg B_corrected;
+
   wire [`WORD_LEN-1:0] adder_res;
   wire adder_carry_out;
-  wire inverted_B;
-  assign inverted_B = ((ALUOp == `SUB) | (ALUOp == `SLT) | (ALUOp == `BLT) | (ALUOp == `BGE));
+  wire need_sub;
+  //assign inverted_B = ((ALUOp == `SUB) | (ALUOp == `SLT) | (ALUOp == `BLT) | (ALUOp == `BGE) | (ALUOp == `SIMD_SUB));
 
   N_bit_full_adder #(`WORD_LEN) adder (
       .num1(A),
-      .num2(inverted_B ? (~B + 1) : B),
+      .num2(B),
+      .sub (need_sub),
+
       .carry_out(adder_carry_out),
       .result(adder_res)
   );
 
-    SIMD_add #(`WORD_LEN) adder (
+  wire [`SIMD_OPERAND_NUM-1:0] SIMD_carry;
+  wire [`WORD_LEN-1:0] SIMD_res;
+
+  SIMD_add #(`WORD_LEN, `SIMD_OPERAND_DIGIT, `SIMD_OPERAND_NUM) SIMD_adder (
       .num1(A),
-      .num2(inverted_B ? (~B + 1) : B),
-      .carry_out(adder_carry_out),
-      .result(adder_res)
+      .num2(B),
+      .sub (need_sub),
+
+      .carry_out(SIMD_carry),
+      .result(SIMD_res)
   );
-
-
 
   always @* begin
     case (ALUOp)
@@ -128,8 +115,9 @@ module alu_riscv (
       end
 
       `BLTU: begin
+        B_corrected = B;
         Result = 0;
-        Flag   = (A < B);
+        Flag = (A < B);
       end
 
       `BGEU: begin
@@ -138,11 +126,13 @@ module alu_riscv (
       end
 
       `SIMD_ADD: begin
-        
+        Result = SIMD_res;
+        Flag   = 0;
       end
 
       `SIMD_SUB: begin
-       
+        Result = SIMD_res;
+        Flag   = 0;
       end
 
       default: begin
