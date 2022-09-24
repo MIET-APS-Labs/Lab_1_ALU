@@ -7,6 +7,7 @@ module SIMD_add #(
 ) (
     input [VEC_LEN-1:0] num1,
     input [VEC_LEN-1:0] num2,
+    input sub,
 
     output reg [OPERAND_NUM-1:0] carry_out,
     output reg [VEC_LEN-1:0] result
@@ -16,10 +17,12 @@ module SIMD_add #(
   generate
     for (i = 0; i < OPERAND_NUM; i = i + 1) begin
       N_bit_full_adder #(OPERAND_DIGIT) adder (
-          .num1(num1[(i+1)*OPERAND_DIGIT-1:i*OPERAND_DIGIT-1]),
-          .num2(num2[(i+1)*OPERAND_DIGIT-1:i*OPERAND_DIGIT-1]),
+          .num1(num1[(i+1)*OPERAND_DIGIT-1:i*OPERAND_DIGIT]),
+          .num2(num2[(i+1)*OPERAND_DIGIT-1:i*OPERAND_DIGIT]),
+          .sub (sub),
+
           .carry_out(carry_out[i]),
-          .result(result[(i+1)*OPERAND_DIGIT-1:i*OPERAND_DIGIT-1])
+          .result(result[(i+1)*OPERAND_DIGIT-1:i*OPERAND_DIGIT])
       );
     end
   endgenerate
