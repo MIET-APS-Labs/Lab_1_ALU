@@ -1,5 +1,4 @@
 `define ALU_OP_LEN 5
-
 `define ALU_OP_NUM 16
 
 //  ALU op codes
