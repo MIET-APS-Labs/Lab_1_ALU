@@ -14,12 +14,10 @@ module my_alu (
     output reg [`WORD_LEN-1:0] Result
 );
 
-  reg B_corrected;
+  reg need_sub;
 
   wire [`WORD_LEN-1:0] adder_res;
   wire adder_carry_out;
-  wire need_sub;
-  //assign inverted_B = ((ALUOp == `SUB) | (ALUOp == `SLT) | (ALUOp == `BLT) | (ALUOp == `BGE) | (ALUOp == `SIMD_SUB));
 
   N_bit_full_adder #(`WORD_LEN) adder (
       .num1(A),
@@ -41,6 +39,35 @@ module my_alu (
       .carry_out(SIMD_carry),
       .result(SIMD_res)
   );
+
+  always @(ALUOp) begin
+    case (ALUOp)
+      `SUB: begin
+        need_sub = 1;
+      end
+
+      `SLT: begin
+        need_sub = 1;
+      end
+
+      `BLT: begin
+        need_sub = 1;
+      end
+
+      `BGE: begin
+        need_sub = 1;
+      end
+
+      `SIMD_SUB: begin
+        need_sub = 1;
+      end
+
+      default: begin
+        need_sub = 0;
+      end
+    endcase
+
+  end
 
   always @* begin
     case (ALUOp)
@@ -115,9 +142,8 @@ module my_alu (
       end
 
       `BLTU: begin
-        B_corrected = B;
         Result = 0;
-        Flag = (A < B);
+        Flag   = (A < B);
       end
 
       `BGEU: begin
