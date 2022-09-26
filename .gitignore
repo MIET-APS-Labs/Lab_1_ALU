@@ -53,12 +53,6 @@
 #Constraint files
 #Do NOT ignore *.xdc files
 !*.xdc
-#TCL - files
-!*.tcl
-#Journal - files
-!*.jou
-#Reports
-!*.rpt
 !*.txt
 !*.vdi
 #C-files
