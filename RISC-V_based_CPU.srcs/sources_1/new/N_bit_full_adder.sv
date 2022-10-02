@@ -8,13 +8,13 @@ module N_bit_full_adder #(
     input [DIGIT-1:0] num2,
     input sub,
 
-    output wire carry_out,
-    output reg [DIGIT-1:0] result
+    output logic carry_out,
+    output logic [DIGIT-1:0] result
 );
 
-  wire [DIGIT-1:0] num2_real = sub ? ~num2 + 1 : num2;
+  logic [DIGIT-1:0] num2_real = sub ? ~num2 + 1 : num2;
 
-  wire [DIGIT-1:0] carry;
+  logic [DIGIT-1:0] carry;
   genvar i;
   generate
     full_adder f (

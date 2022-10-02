@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 
 module full_adder (
-    input wire A,
-    input wire B,
-    input wire carry_in,
+    input logic A,
+    input logic B,
+    input logic carry_in,
 
-    output wire carry_out,
-    output wire res
+    output logic carry_out,
+    output logic res
 );
 
 
