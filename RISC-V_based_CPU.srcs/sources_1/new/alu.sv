@@ -8,16 +8,14 @@ module alu #(
     parameter WORD_LEN   = 32,
     parameter ALU_OP_LEN = 5
 ) (
-    input [  `WORD_LEN-1:0] A,
-    input [  `WORD_LEN-1:0] B,
+    input [`WORD_LEN-1:0] A,
+    input [`WORD_LEN-1:0] B,
     input [`ALU_OP_LEN-1:0] ALUOp,
-
     output reg Flag,
     output reg [`WORD_LEN-1:0] Result
 );
 
   logic need_sub;
-
   logic [`WORD_LEN-1:0] adder_res;
   logic adder_carry_out;
 
@@ -60,9 +58,9 @@ module alu #(
         need_sub = 1;
       end
 
-      `SIMD_SUB: begin
-        need_sub = 1;
-      end
+      // `SIMD_SUB: begin
+      //   need_sub = 1;
+      // end
 
       default: begin
         need_sub = 0;
@@ -153,15 +151,15 @@ module alu #(
         Flag   = (A >= B);
       end
 
-      `SIMD_ADD: begin
-        Result = SIMD_res;
-        Flag   = 0;
-      end
+      // `SIMD_ADD: begin
+      //   Result = SIMD_res;
+      //   Flag   = 0;
+      // end
 
-      `SIMD_SUB: begin
-        Result = SIMD_res;
-        Flag   = 0;
-      end
+      // `SIMD_SUB: begin
+      //   Result = SIMD_res;
+      //   Flag   = 0;
+      // end
 
       default: begin
         Result = 0;
