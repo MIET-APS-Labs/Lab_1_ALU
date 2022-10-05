@@ -10,8 +10,11 @@
 *
 !*/
 !.gitignore
+
 ###########################################################################
 ##	VIVADO
+*.cache/
+*.runs/
 #Source files:
 #Do NOT ignore VHDL, Verilog, block diagrams or EDIF files.
 !*.vhd
@@ -19,6 +22,7 @@
 !*.sv
 !*.bd
 !*.edif
+
 #IP files
 #.xci: synthesis and implemented not possible - you need to return back to the previous version to generate output products
 #.xci + .dcp: implementation possible but not re-synthesis
@@ -31,30 +35,35 @@
 !*.dcp
 !*.vds
 !*.pb
+
 #All bd comments and layout coordinates are stored within .ui
 !*.ui
 !*.ooc
+
 #System Generator
 !*.mdl
 !*.slx
 !*.bxml
+
 #Simulation logic analyzer
 !*.wcfg
 !*.coe
+
 #MIG
 !*.prj
 !*.mem
+
 #Project files
 #XPR  +  *.XML ? XPR (Files are merged into a single XPR file for 2014.1 version)
 #Do NOT ignore *.xpr files
 !*.xpr
-#Include *.xml files for 2013.4 or earlier version
-!*.xml
+
 #Constraint files
 #Do NOT ignore *.xdc files
 !*.xdc
 !*.txt
 !*.vdi
+
 #C-files
 !*.c
 !*.h
