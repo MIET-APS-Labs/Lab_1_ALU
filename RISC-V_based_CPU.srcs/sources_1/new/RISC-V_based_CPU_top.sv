@@ -3,11 +3,13 @@
 `include "myCPU_params.v"
 
 module RISC_V_based_CPU (
-    input clk,
-    input rst,
+    input CLK100MHZ,
     input [15:0] SW,
-    output [32:0] HEX
+    output [6:0] C,
+    output [7:0] AN,
+    output [15:0] LED
 );
+  logic rst = SW[0];
 
   // Const value sign extender
 
@@ -28,7 +30,7 @@ module RISC_V_based_CPU (
 
   parameter COUNTER_WIDTH = $clog2(`INSTR_DEPTH) - 1;
   logic [COUNTER_WIDTH-1:0] clk_cntr = {COUNTER_WIDTH{1'b0}};
-  always_ff @(posedge clk) begin
+  always_ff @(posedge CLK100MHZ) begin
     if (rst) begin
       clk_cntr <= {COUNTER_WIDTH{1'b0}};
     end else begin
@@ -36,7 +38,8 @@ module RISC_V_based_CPU (
     end
   end
 
-
+  assign LED[5:0] = clk_cntr;
+  assign LED[15:6] = reg_read_data1[9:0];
 
 
   // Instruction read-only memory
@@ -53,7 +56,7 @@ module RISC_V_based_CPU (
 
   logic [`WORD_LEN-1:0] sw_val_ext;
   always_comb begin
-    sw_val_ext[`WORD_LEN-1:0] <= {{(`WORD_LEN - 16) {SW[15]}}, SW[15:0]};
+    sw_val_ext[`WORD_LEN-1:0] <= {{(`WORD_LEN - 15) {SW[15]}}, SW[15:1]};
   end
 
 
@@ -87,7 +90,7 @@ module RISC_V_based_CPU (
   reg_file #(`WORD_LEN,
   `RF_WIDTH
   ) my_reg_file (
-      .clk (clk),
+      .clk (CLK100MHZ),
       .adr1(instruction[`INSTR_RA1]),
       .adr2(instruction[`INSTR_RA2]),
       .adr3(instruction[`INSTR_WA]),
@@ -115,6 +118,11 @@ module RISC_V_based_CPU (
       .Result(ALU_res)
   );
 
-  assign HEX = reg_read_data1;
+  disp_HEX my_disp_HEX (
+      .CLK(CLK100MHZ),
+      .num(reg_read_data1),
+      .HEX(C),
+      .DIG(AN)
+  );
 
 endmodule
