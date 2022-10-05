@@ -40,7 +40,7 @@ module alu #(
       .result(SIMD_res)
   );
 
-  always_ff @(ALUOp) begin
+  always_comb begin
     case (ALUOp)
       `SUB: begin
         need_sub = 1;
@@ -69,7 +69,7 @@ module alu #(
 
   end
 
-  always @* begin
+  always_ff @* begin
     case (ALUOp)
       `ADD: begin
         Result = adder_res;
