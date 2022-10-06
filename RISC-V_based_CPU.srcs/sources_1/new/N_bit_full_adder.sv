@@ -2,42 +2,40 @@
 
 
 module N_bit_full_adder #(
-    parameter DIGIT = 32
+    parameter WORD_LEN = 32
 ) (
-    input [DIGIT-1:0] num1,
-    input [DIGIT-1:0] num2,
+    input [WORD_LEN-1:0] A,
+    input [WORD_LEN-1:0] B,
     input sub,
 
-    output logic carry_out,
-    output logic [DIGIT-1:0] result
+    output carry_out,
+    output [WORD_LEN-1:0] res
 );
 
-  logic [DIGIT-1:0] num2_real = sub ? ~num2 + 1 : num2;
-
-  logic [DIGIT-1:0] carry;
+  logic [WORD_LEN-1:0] B_real;
+  assign B_real = sub ? ~B + 1 : B;
+  
+  logic [WORD_LEN-1:0] carry;
   genvar i;
   generate
     full_adder f (
-        num1[0],
-        num2_real[0],
+        A[0],
+        B_real[0],
         0,
         carry[0],
-        result[0]
+        res[0]
     );
 
-    for (i = 1; i < DIGIT; i = i + 1) begin
+    for (i = 1; i < WORD_LEN; i = i + 1) begin
       full_adder f (
-          num1[i],
-          num2_real[i],
+          A[i],
+          B_real[i],
           carry[i-1],
           carry[i],
-          result[i]
+          res[i]
       );
     end
-    assign carry_out = carry[DIGIT-1];
+    assign carry_out = carry[WORD_LEN-1];
   endgenerate
-
-
-
 
 endmodule
