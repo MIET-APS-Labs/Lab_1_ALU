@@ -1,26 +1,36 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 10/05/2022 10:51:15 PM
-// Design Name: 
-// Module Name: instr_rom_testbench
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
 
+`define WORD_LEN 32
 
-module instr_rom_testbench(
+`define INSTR_WIDTH 32
+`define INSTR_DEPTH 64
 
-    );
+module instr_rom_testbench ();
+
+  logic CLK;
+  parameter PERIOD = 20;
+  always begin
+    CLK = 1'b0;
+    #(PERIOD / 2) CLK = 1'b1;
+    #(PERIOD / 2);
+  end
+
+  logic [`WORD_LEN-1:0] instruction;
+  instr_rom dut (
+      .addr(clk_cntr),
+      .rd  (instruction)
+  );
+
+  parameter COUNTER_WIDTH = $clog2(`INSTR_DEPTH);
+  logic [COUNTER_WIDTH-1:0] clk_cntr = {COUNTER_WIDTH{1'b0}};
+  initial begin
+    clk_cntr = 0;
+    for (int i = 0; i < `INSTR_DEPTH; i++) begin
+      @(posedge CLK);
+      #5;
+      $display("%d) Instruction = %b", clk_cntr, instruction);
+      clk_cntr <= clk_cntr + 1;
+    end
+      $finish;
+  end
 endmodule
