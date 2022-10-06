@@ -1,18 +1,18 @@
 `timescale 1ns / 1ps
 
 module reg_file #(
-    parameter WORD_LEN   = 32,
-    parameter WIDTH  = 32
+    parameter WORD_LEN = 32,
+    parameter WIDTH = 32
 ) (
     input clk,
     input [$clog2(WIDTH)-1:0] adr1,  // read address 1
     input [$clog2(WIDTH)-1:0] adr2,  // read address 2
     input [$clog2(WIDTH)-1:0] adr3,  // write address
-    input [WORD_LEN:0] wd3,  // Write Data
+    input [WORD_LEN-1:0] wd3,  // Write Data
     input we3,  // Write Enable
 
-    output [WORD_LEN:0] rd1,  // Read Data
-    output [WORD_LEN:0] rd2   // Read Data
+    output [WORD_LEN-1:0] rd1,  // Read Data
+    output [WORD_LEN-1:0] rd2   // Read Data
 );
   logic [WORD_LEN-1:0] RAM[0:WIDTH-1];
 
