@@ -15,24 +15,24 @@ module SIMD_add_testbench ();
   wire [`WORD_LEN-1:0] adder_res;
 
   N_bit_full_adder #(`WORD_LEN) adder (
-      .num1(A),
-      .num2(B),
+      .A(A),
+      .B(B),
       .sub (sub),
 
       .carry_out(adder_carry_out),
-      .result(adder_res)
+      .res(adder_res)
   );
 
   wire [`SIMD_OPERAND_NUM-1:0] SIMD_carry;
   wire [`WORD_LEN-1:0] SIMD_res;
 
   SIMD_add #(`WORD_LEN, `SIMD_OPERAND_DIGIT, `SIMD_OPERAND_NUM) dut (
-      .num1(A),
-      .num2(B),
+      .vec1(A),
+      .vec2(B),
       .sub (sub),
 
       .carry_out(SIMD_carry),
-      .result(SIMD_res)
+      .res(SIMD_res)
   );
 
   initial begin

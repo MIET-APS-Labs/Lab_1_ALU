@@ -45,12 +45,12 @@ module alu #(
   logic adder_carry_out;
 
   N_bit_full_adder #(WORD_LEN) adder (
-      .num1(A),
-      .num2(B),
+      .A(A),
+      .B(B),
       .sub (need_sub),
 
       .carry_out(adder_carry_out),
-      .result(adder_res)
+      .res(adder_res)
   );
 
   logic [SIMD_OPERAND_NUM-1:0] SIMD_carry;
