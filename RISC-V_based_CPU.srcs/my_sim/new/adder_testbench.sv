@@ -6,18 +6,18 @@
 
 module adder_testbench ();
 
-  reg [`WORD_LEN-1:0] A, B;
-  reg sub;
+  logic [`WORD_LEN-1:0] A, B;
+  logic sub;
 
-  wire carry;
-  wire [`WORD_LEN-1:0] res;
+  logic carry;
+  logic [`WORD_LEN-1:0] res;
   N_bit_full_adder dut (
-      .num1(A),
-      .num2(B),
+      .A(A),
+      .B(B),
       .sub (sub),
 
       .carry_out(carry),
-      .result(res)
+      .res(res)
   );
 
   initial begin

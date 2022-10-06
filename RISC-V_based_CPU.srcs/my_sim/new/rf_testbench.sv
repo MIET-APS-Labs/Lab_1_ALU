@@ -19,7 +19,7 @@ module rf_testbench ();
   logic [`WORD_LEN-1:0] RD1;
   logic [`WORD_LEN-1:0] RD2;
 
-  my_rf #(`WORD_LEN, `RF_WIDTH
+  reg_file #(`WORD_LEN, `RF_WIDTH
   ) dut (
       .clk (CLK),
       .adr1(RA1),

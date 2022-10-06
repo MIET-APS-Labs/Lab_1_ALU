@@ -28,11 +28,11 @@ module alu_testbench ();
 
   reg [`WORD_LEN-1:0] A, B, B_sub;
   reg  [          4:0] cmd;
-  
+
   wire                 flag;
   wire [`WORD_LEN-1:0] res;
 
-  my_alu #(`WORD_LEN, `ALU_OP_LEN) dut (
+  alu dut (
       .A(A),
       .B(B),
       .ALUOp(cmd),
