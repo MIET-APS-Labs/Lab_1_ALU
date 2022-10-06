@@ -19,7 +19,8 @@ module rf_testbench ();
   logic [`WORD_LEN-1:0] RD1;
   logic [`WORD_LEN-1:0] RD2;
 
-  reg_file #(`WORD_LEN, `RF_WIDTH
+  reg_file #(`WORD_LEN,
+  `RF_WIDTH
   ) dut (
       .clk (CLK),
       .adr1(RA1),
@@ -65,7 +66,7 @@ module rf_testbench ();
         $display("FAILED: Write/Read error: Addres = %d, Data = %b", i, data);
       end
     end
-
+    $finish;
 
   end
 
