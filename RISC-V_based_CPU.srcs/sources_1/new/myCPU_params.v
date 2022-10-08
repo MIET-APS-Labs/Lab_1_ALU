@@ -6,27 +6,7 @@
 `define ALU_OP_LEN 5
 `define ALU_OP_NUM 16
 
-//  ALU op codes
-`define ADD 5'b00000
-`define SUB 5'b01000
-`define SLL 5'b00001
-`define SLT 5'b00010
-`define SLTU 5'b00011
-`define XOR 5'b00100
-`define SRL 5'b00101
-`define SRA 5'b01101
-`define OR 5'b00110
-`define AND 5'b00111
-`define BEQ 5'b11000
-`define BNE 5'b11001
-`define BLT 5'b11100
-`define BGE 5'b11101
-`define BLTU 5'b11110
-`define BGEU 5'b11111
-
-//  SIMD op codes
-`define SIMD_ADD 5'b01001	
-`define SIMD_SUB 5'b01010	
+// ALU op code format flag_sub_opcode
 
 
 //  SIMD Rules
@@ -51,19 +31,28 @@
 `define INSTR_DEPTH 64
 //////////////////////////////////////////////
 
+// Instuction format
+// B[31]_C[30]_WS[29:28]_ALUop[27:23]_RA1[22:18]_RA2[17:13]_CONST[12:5]_WA[4:0]
 
 
 //////////////////////////////////////////////
 //  Instruction parts
 
-`define INSTR_CONST 7:0
-`define INSTR_WA 12:8
-`define INSTR_RA1 17:13
-`define INSTR_RA2 22:18
-`define INSTR_ALUop 26:23
-`define INSTR_WS 28:27
-`define INSTR_WE 29
+`define INSTR_WA 4:0
+
+`define INSTR_CONST 12:5
+`define CONST_LEN 8
+
+`define INSTR_RA2 17:13
+`define INSTR_RA1 22:18
+
+`define INSTR_ALUop 27:23
+
+`define INSTR_WS 29:28
+
 `define INSTR_C 30
 `define INSTR_B 31
+
+
 //////////////////////////////////////////////
 
