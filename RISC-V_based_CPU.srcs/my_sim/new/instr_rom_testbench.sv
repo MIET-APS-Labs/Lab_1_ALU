@@ -22,9 +22,8 @@ module instr_rom_testbench ();
   );
 
   parameter COUNTER_WIDTH = $clog2(`INSTR_DEPTH);
-  logic [COUNTER_WIDTH-1:0] clk_cntr = {COUNTER_WIDTH{1'b0}};
+  bit [COUNTER_WIDTH-1:0] clk_cntr;
   initial begin
-    clk_cntr = 0;
     for (int i = 0; i < `INSTR_DEPTH; i++) begin
       @(posedge CLK);
       #5;
