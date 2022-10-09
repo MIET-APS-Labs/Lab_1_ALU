@@ -33,8 +33,6 @@ module rf_testbench ();
       .rd2(RD2)
   );
 
-
-  // Note: CLK must be defined as a reg when using this method
   parameter PERIOD = 10;
   always begin
     CLK = 1'b0;
