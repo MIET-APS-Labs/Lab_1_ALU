@@ -8,10 +8,6 @@
 
 // ALU op code format flag_sub_opcode
 
-
-//  SIMD Rules
-`define SIMD_OPERAND_DIGIT 16
-`define SIMD_OPERAND_NUM 2
 /////////////////////////////////////////////
 
 
@@ -32,7 +28,7 @@
 //////////////////////////////////////////////
 
 // Instuction format
-// B[31]_C[30]_WS[29:28]_ALUop[27:23]_RA1[22:18]_RA2[17:13]_CONST[12:5]_WA[4:0]
+// B[31] C[30] WS[29:28] ALUop[27:23] RA1[22:18] RA2[17:13] CONST[12:5] WA[4:0]
 
 
 //////////////////////////////////////////////
