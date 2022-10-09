@@ -18,27 +18,27 @@ module disp_HEX #(
 ) (
     input CLK,
     input [WORD_LEN-1:0] num,
-    output reg [`SEGMENTS_NUM-1:0] HEX,
-    output reg [`DIGITS_NUM-1:0] DIG
+    output logic [`SEGMENTS_NUM-1:0] HEX,
+    output logic [`DIGITS_NUM-1:0] DIG
 );
 
-  logic [7:0] refresh_cntr;
+  logic [$clog2(`DIGITS_NUM):0] refresh_cntr;
 
   initial begin
-    DIG = 7'b00000001;
+    DIG <= `DIG_0;
+    refresh_cntr <= 0;
   end
-
-  always_ff @(posedge CLK) begin
-    if (refresh_cntr >= 7) begin
+  always @(posedge CLK) begin
+    if (refresh_cntr >= (`DIGITS_NUM - 1)) begin
       refresh_cntr <= 0;
-      DIG <= 7'b00000001;
+      DIG <= `DIG_0;
     end else begin
       refresh_cntr <= refresh_cntr + 1;
       DIG <= DIG << 1;
     end
   end
 
-  always_ff @* begin
+  always_comb begin
     case (DIG)
       `DIG_0: begin
         case (num[3:0])
