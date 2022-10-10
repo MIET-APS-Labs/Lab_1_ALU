@@ -44,6 +44,8 @@
 
 `define INSTR_ALUop 27:23
 
+`define INSTR_WS_2 28
+`define INSTR_WS_1 29
 `define INSTR_WS 29:28
 
 `define INSTR_C 30
