@@ -4,32 +4,6 @@
 // ALU based on RISC-V, extended with simple SIMD commands
 //////////////////////////////////////////////////////////////////////////////////
 
-// ALU op code format flag_sub_opcode
-`define ADD 5'b 00000
-`define SUB 5'b 01000
-
-`define SLT 5'b 01001
-`define SLTU 5'b 01010
-
-`define SLL 5'b 00001
-`define SRL 5'b 00011
-`define SRA 5'b 00100
-
-`define XOR 5'b 00101
-`define OR 5'b 00110
-`define AND 5'b 00111
-
-`define BEQ 5'b 10000
-`define BNE 5'b 10001
-`define BLT 5'b 11000
-`define BGE 5'b 11001
-`define BLTU 5'b 11010
-`define BGEU 5'b 11011
-
-//  SIMD op codes
-`define SIMD_ADD 5'b 10010	
-`define SIMD_SUB 5'b 11100
-
 module alu #(
     parameter WORD_LEN = 32,
     parameter ALU_OP_LEN = 5,
