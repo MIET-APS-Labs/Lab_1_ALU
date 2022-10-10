@@ -8,8 +8,6 @@ module cpu_top_testbench ();
   logic [7:0] dig;
   logic [15:0] leds;
 
-  logic [31:0] out;
-
   logic CLK;
   parameter PERIOD = 20;
   always begin
@@ -21,8 +19,6 @@ module cpu_top_testbench ();
   RISC_V_based_CPU_top dut (
       .CLK100MHZ(CLK),
       .SW(`SWITCHES_NUM),
-
-      .RD1_OUT(out),
 
       .C  (hex),
       .AN (dig),
