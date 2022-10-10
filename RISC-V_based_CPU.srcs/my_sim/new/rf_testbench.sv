@@ -10,12 +10,12 @@ module rf_testbench ();
 
   logic CLK;
 
-  logic WE;
-  logic [$clog2(`WORD_LEN)-1-1:0] WA3;
-  logic [`WORD_LEN-1:0] WD;
+  logic WE3;
+  logic [$clog2(`WORD_LEN)-1:0] WA3;
+  logic [`WORD_LEN-1:0] WD3;
 
-  logic [$clog2(`WORD_LEN)-1-1:0] RA1;
-  logic [$clog2(`WORD_LEN)-1-1:0] RA2;
+  logic [$clog2(`WORD_LEN)-1:0] RA1;
+  logic [$clog2(`WORD_LEN)-1:0] RA2;
   logic [`WORD_LEN-1:0] RD1;
   logic [`WORD_LEN-1:0] RD2;
 
@@ -26,8 +26,8 @@ module rf_testbench ();
       .adr1(RA1),
       .adr2(RA2),
       .adr3(WA3),
-      .wd  (WD),
-      .we3 (WE),
+      .wd3 (WD3),
+      .we3 (WE3),
 
       .rd1(RD1),
       .rd2(RD2)
@@ -48,20 +48,22 @@ module rf_testbench ();
       #1;
       data = $urandom();  //returns 32 bit random
 
-      WE   = 1'b1;
-      WD   = data;
+      WE3   = 1'b1;
+      WD3   = data;
       WA3  = i;
 
       @(posedge CLK);
       #1;
-      WE  = 0'b1;
+      WE3  = 1'b0;
       RA1 = i;
       @(posedge CLK);
       #1;
       if (RD1 == data) begin
-        $display("PASSED: Write/Read correct: Addres = %d, Data = %b", i, data);
+        $display("PASSED: Write/Read correct: Addres = %d, Test data = %b, Read data = %b", i,
+                 data, RD1);
       end else begin
-        $display("FAILED: Write/Read error: Addres = %d, Data = %b", i, data);
+        $display("FAILED: Write/Read correct: Addres = %d, Test data = %b, Read data = %b", i,
+                 data, RD1);
       end
     end
     $finish;
