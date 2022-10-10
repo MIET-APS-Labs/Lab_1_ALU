@@ -13,33 +13,60 @@
 `define DIG_6 8'b01000000
 `define DIG_7 8'b10000000
 
+`define CLK_DIV 1000
+
 module disp_HEX #(
     parameter WORD_LEN = 32
 ) (
     input CLK,
     input [WORD_LEN-1:0] num,
+    input rst,
+
     output logic [`SEGMENTS_NUM-1:0] HEX,
-    output logic [`DIGITS_NUM-1:0] DIG
+    output logic [  `DIGITS_NUM-1:0] DIG
 );
 
-  logic [$clog2(`DIGITS_NUM):0] refresh_cntr;
+  logic [11:0] clk_cntr = 0;
+  logic CLK_divided;
 
-  initial begin
-    DIG <= `DIG_0;
-    refresh_cntr <= 0;
-  end
   always @(posedge CLK) begin
-    if (refresh_cntr >= (`DIGITS_NUM - 1)) begin
-      refresh_cntr <= 0;
-      DIG <= `DIG_0;
+    if (~rst) begin
+      clk_cntr = 0;
+    end else 
+    if (clk_cntr >= `CLK_DIV) begin
+      clk_cntr <= 0;
     end else begin
-      refresh_cntr <= refresh_cntr + 1;
-      DIG <= DIG << 1;
+      clk_cntr <= clk_cntr + 1;
     end
   end
 
-  always_comb begin
-    case (DIG)
+  assign CLK_divided = (clk_cntr == `CLK_DIV);
+
+  logic [$clog2(`DIGITS_NUM):0] refresh_cntr;
+  logic [`DIGITS_NUM-1:0] DIG_inv;
+  initial begin
+    DIG_inv <= `DIG_0;
+    refresh_cntr <= 0;
+  end
+
+  assign DIG = ~DIG_inv;
+
+  always @(posedge CLK) begin
+    //$display("clk_cntr = %b, CLK_divided = %b", clk_cntr, CLK_divided);
+    if (CLK_divided == 1) begin
+      if (refresh_cntr >= (`DIGITS_NUM - 1)) begin
+        refresh_cntr <= 0;
+        DIG_inv <= `DIG_0;
+      end else begin
+        refresh_cntr <= refresh_cntr + 1;
+        DIG_inv <= DIG_inv << 1;
+      end
+    end
+  end
+
+  always @* begin
+    //$display("disp_HEX clk_cntr: %b", clk_cntr);
+    case (DIG_inv)
       `DIG_0: begin
         case (num[3:0])
           4'b1111: HEX = 7'b0001110;
