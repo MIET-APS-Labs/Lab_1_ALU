@@ -22,6 +22,7 @@ module reg_file #(
   always_ff @(posedge clk) begin
     if (we3 && adr3) begin
       RAM[adr3] <= wd3;
+      //$display("\nREG_FILE In write case: adr3 = %d; wd3 = %b; RAM[adr3] = %b\n", adr3, wd3, RAM[adr3]);
     end
   end
 
