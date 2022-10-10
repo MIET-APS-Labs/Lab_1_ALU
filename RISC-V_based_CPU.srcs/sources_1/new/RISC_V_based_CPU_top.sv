@@ -6,8 +6,6 @@ module RISC_V_based_CPU_top (
     input CLK100MHZ,
     input [15:0] SW,
 
-    output [`WORD_LEN-1:0] RD1_OUT,
-
     output [ 6:0] C,
     output [ 7:0] AN,
     output [15:0] LED
@@ -57,7 +55,7 @@ module RISC_V_based_CPU_top (
       .adr2(instruction[`INSTR_RA2]),
       .adr3(instruction[`INSTR_WA]),
       .wd3 (reg_write_data),
-      .we3 (instruction[`INSTR_WS+1] | instruction[-1+`INSTR_WS]),
+      .we3 (instruction[`INSTR_WS_1] | instruction[`INSTR_WS_2]),
 
       .rd1(reg_read_data1),
       .rd2(reg_read_data2)
@@ -78,21 +76,28 @@ module RISC_V_based_CPU_top (
   parameter COUNTER_WIDTH = $clog2(`INSTR_DEPTH);
   bit [COUNTER_WIDTH-1:0] PC;
   always_ff @(posedge CLK100MHZ, posedge rst) begin
-    if (rst) begin
-      PC <= {COUNTER_WIDTH{1'b0}};
+    if (~rst) begin
+      PC <= 0;
     end else begin
-      $display("SW: %b\nReset: %b\nProgram counter: %d", SW, rst, PC);
+      //$display("SW: %b\nReset: %b\nProgram counter: %d", SW, rst, PC);
       if ((instruction[`INSTR_C] & ALU_flag) | instruction[`INSTR_B]) begin
         PC <= PC + const_val_ext;
       end else begin
         PC <= PC + 1;
       end
     end
+
+    // B[31] C[30] WS[29:28] ALUop[27:23] RA1[22:18] RA2[17:13] CONST[12:5] WA[4:0]
+    // $display(
+    //     "PC = %d; B = %b; C = %b; WS = %b; ALUop = %b; RA1 = %b; RA2 = %b; CONST = %b; WA = %b",
+    //     PC, instruction[`INSTR_B], instruction[`INSTR_C], instruction[`INSTR_WS],
+    //     instruction[`INSTR_ALUop], instruction[`INSTR_RA1], instruction[`INSTR_RA2],
+    //     instruction[`INSTR_CONST], instruction[`INSTR_WA]);
+
   end
 
   assign LED[5:0]  = PC;
   assign LED[15:6] = reg_read_data1[9:0];
-  assign RD1_OUT = reg_read_data1;
 
 
   // Switches value sign extender
@@ -120,6 +125,8 @@ module RISC_V_based_CPU_top (
   disp_HEX my_disp_HEX (
       .CLK(CLK100MHZ),
       .num(reg_read_data1),
+      .rst(rst),
+
       .HEX(C),
       .DIG(AN)
   );
