@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-`define SWITCHES_NUM 16'b0000000000000100   // = 2
+`define SWITCHES_NUM 16'b0000000000000101   // = 2
 
 module cpu_top_testbench ();
 
