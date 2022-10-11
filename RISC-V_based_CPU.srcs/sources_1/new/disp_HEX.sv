@@ -21,39 +21,39 @@ module disp_HEX #(
     input CLK,
     input [WORD_LEN-1:0] num,
     input rst,
-
     output logic [`SEGMENTS_NUM-1:0] HEX,
-    output logic [  `DIGITS_NUM-1:0] DIG
+    output logic [`DIGITS_NUM-1:0] DIG
 );
 
   logic [11:0] clk_cntr = 0;
-  logic CLK_divided;
+
+  initial begin
+    DIG_inv <= `DIG_0;
+    refresh_cntr <= 0;
+  end
+
+
+  logic [$clog2(`DIGITS_NUM):0] refresh_cntr;
+  logic [`DIGITS_NUM-1:0] DIG_inv;
+
+  assign DIG = ~DIG_inv;
 
   always @(posedge CLK) begin
     if (~rst) begin
-      clk_cntr = 0;
-    end else 
-    if (clk_cntr >= `CLK_DIV) begin
+      clk_cntr <= 0;
+    end else if (clk_cntr >= `CLK_DIV) begin
       clk_cntr <= 0;
     end else begin
       clk_cntr <= clk_cntr + 1;
     end
   end
 
-  assign CLK_divided = (clk_cntr == `CLK_DIV);
-
-  logic [$clog2(`DIGITS_NUM):0] refresh_cntr;
-  logic [`DIGITS_NUM-1:0] DIG_inv;
-  initial begin
-    DIG_inv <= `DIG_0;
-    refresh_cntr <= 0;
-  end
-
-  assign DIG = ~DIG_inv;
 
   always @(posedge CLK) begin
     //$display("clk_cntr = %b, CLK_divided = %b", clk_cntr, CLK_divided);
-    if (CLK_divided == 1) begin
+    if (~rst) begin
+      DIG_inv <= `DIG_0;
+    end else if (clk_cntr == `CLK_DIV) begin
       if (refresh_cntr >= (`DIGITS_NUM - 1)) begin
         refresh_cntr <= 0;
         DIG_inv <= `DIG_0;
