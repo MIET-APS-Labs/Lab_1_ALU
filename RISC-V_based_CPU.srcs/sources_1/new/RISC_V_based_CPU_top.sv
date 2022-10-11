@@ -11,7 +11,7 @@ module RISC_V_based_CPU_top (
     output [15:0] LED
 );
   logic rst;
-  assign rst = SW[0];
+  assign rst = SW[15];
 
   // Instruction read-only memory
 
@@ -65,7 +65,8 @@ module RISC_V_based_CPU_top (
 
   logic [`WORD_LEN-1:0] const_val_ext;
   assign const_val_ext = {
-    {(`WORD_LEN - `CONST_LEN) {instruction[`C_COBRA_INSTR_CONST+(`CONST_LEN-1)]}}, instruction[`C_COBRA_INSTR_CONST]
+    {(`WORD_LEN - `CONST_LEN) {instruction[`C_COBRA_INSTR_CONST+(`CONST_LEN-1)]}},
+    instruction[`C_COBRA_INSTR_CONST]
   };
 
 
@@ -75,8 +76,9 @@ module RISC_V_based_CPU_top (
 
   parameter COUNTER_WIDTH = $clog2(`INSTR_DEPTH);
   bit [COUNTER_WIDTH-1:0] PC;
-  always_ff @(posedge CLK100MHZ, posedge rst) begin
+  always_ff @(posedge CLK100MHZ) begin
     if (~rst) begin
+      //$display("\nReseted reg_read_data1 = %b\n", reg_read_data1);
       PC <= 0;
     end else begin
       //$display("SW: %b\nReset: %b\nProgram counter: %d", SW, rst, PC);
@@ -102,7 +104,7 @@ module RISC_V_based_CPU_top (
   // Switches value sign extender
 
   logic [`WORD_LEN-1:0] sw_val_ext;
-  assign sw_val_ext = {{(`WORD_LEN - 15) {SW[15]}}, SW[15:1]};
+  assign sw_val_ext = {{(`WORD_LEN - 15) {SW[14]}}, SW[14:0]};
 
 
 
@@ -125,7 +127,7 @@ module RISC_V_based_CPU_top (
 
 
   assign LED[5:0]  = PC;
-  assign LED[15:6] = reg_read_data1[9:0]; 
+  assign LED[15:6] = reg_read_data1[9:0];
 
 
   disp_HEX my_disp_HEX (
