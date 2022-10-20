@@ -19,6 +19,8 @@
 `define SRL 5'b 00011
 `define SRA 5'b 00100
 
+// logic
+
 `define XOR 5'b 00101
 `define OR 5'b 00110
 `define AND 5'b 00111
