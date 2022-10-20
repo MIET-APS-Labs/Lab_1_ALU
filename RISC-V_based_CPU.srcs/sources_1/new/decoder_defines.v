@@ -46,18 +46,27 @@
 
 // opcodes
 
-`define LOAD_OPCODE 5'b00_000
+`define OP_OPCODE 5'b01_100
 
-`define LOAD_FUNCT_3_LB 1'h0
-`define LOAD_FUNCT_3_LH 1'h1
-`define LOAD_FUNCT_3_LW 1'h2
-`define LOAD_FUNCT_3_LBU 1'h4
-`define LOAD_FUNCT_3_LHU 1'h5
+`define OP_FUNCT_3_ADD_SUB 1'h0
+`define OP_FUNCT_3_XOR 1'h4
+`define OP_FUNCT_3_OR 1'h6
+`define OP_FUNCT_3_AND 1'h7
+`define OP_FUNCT_3_SLL 1'h1
+`define OP_FUNCT_3_SRL_SRA 1'h5
+`define OP_FUNCT_3_SLT 1'h2
+`define OP_FUNCT_3_SLTU 1'h3
 
-
-
-`define MISC_MEM_OPCODE 5'b00_011
-
+`define OP_FUNCT_7_ADD 2'h00
+`define OP_FUNCT_7_SUB 2'h20
+`define OP_FUNCT_7_XOR 2'h00
+`define OP_FUNCT_7_OR 2'h00
+`define OP_FUNCT_7_AND 2'h00
+`define OP_FUNCT_7_SLL 2'h00
+`define OP_FUNCT_7_SRL 2'h00
+`define OP_FUNCT_7_SRA 2'h20
+`define OP_FUNCT_7_SLT 2'h00
+`define OP_FUNCT_7_SLTU 2'h00
 
 
 `define OP_IMM_OPCODE 5'b00_100
@@ -77,9 +86,16 @@
 `define OP_IMM_FUNCT_7_SLAI 2'h20
 
 
+`define LUI_OPCODE 5'b01_101
 
-`define AUIPC_OPCODE 5'b00_101
 
+`define LOAD_OPCODE 5'b00_000
+
+`define LOAD_FUNCT_3_LB 1'h0
+`define LOAD_FUNCT_3_LH 1'h1
+`define LOAD_FUNCT_3_LW 1'h2
+`define LOAD_FUNCT_3_LBU 1'h4
+`define LOAD_FUNCT_3_LHU 1'h5
 
 
 `define STORE_OPCODE 5'b01_000
@@ -89,36 +105,8 @@
 `define STORE_FUNCT_3_SW 1'h2
 
 
-`define OP_OPCODE 5'b01_100
-
-`define OP_FUNCT_3_ADD 1'h0
-`define OP_FUNCT_3_SUB 1'h0
-`define OP_FUNCT_3_XOR 1'h4
-`define OP_FUNCT_3_OR 1'h6
-`define OP_FUNCT_3_AND 1'h7
-`define OP_FUNCT_3_SLL 1'h1
-`define OP_FUNCT_3_SRL 1'h5
-`define OP_FUNCT_3_SRA 1'h5
-`define OP_FUNCT_3_SLT 1'h2
-`define OP_FUNCT_3_SLTU 1'h3
-
-`define OP_FUNCT_7_ADD 2'h00
-`define OP_FUNCT_7_SUB 2'h20
-`define OP_FUNCT_7_XOR 2'h00
-`define OP_FUNCT_7_OR 2'h00
-`define OP_FUNCT_7_AND 2'h00
-`define OP_FUNCT_7_SLL 2'h00
-`define OP_FUNCT_7_SRL 2'h00
-`define OP_FUNCT_7_SRA 2'h20
-`define OP_FUNCT_7_SLT 2'h00
-`define OP_FUNCT_7_SLTU 2'h00
-
-
-
-`define LUI_OPCODE 5'b01_101
-
-
 `define BRANCH_OPCODE 5'b11_000
+
 `define BRANCH_FUNCT_3_BEQ 1'h0
 `define BRANCH_FUNCT_3_BNE 1'h1
 `define BRANCH_FUNCT_3_BLT 1'h4
@@ -127,10 +115,18 @@
 `define BRANCH_FUNCT_3_BGEU 1'h7
 
 
+`define JAL_OPCODE 5'b11_011
+
+
 `define JALR_OPCODE 5'b11_001
 `define JALR_FUNCT_3_SLTU 1'h0
 
-`define JAL_OPCODE 5'b11_011
+
+`define AUIPC_OPCODE 5'b00_101
+
+
+`define MISC_MEM_OPCODE 5'b00_011
+
 
 `define SYSTEM_OPCODE 5'b11_100
 
