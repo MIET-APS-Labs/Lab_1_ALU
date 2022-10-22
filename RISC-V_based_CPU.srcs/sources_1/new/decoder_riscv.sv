@@ -7,20 +7,20 @@ module decoder_riscv (
     input [`WORD_LEN-1:0] fetched_instr_i,  // Instruction for decoding, read from instr_rom
 
     output logic [1:0] ex_op_a_sel_o,  // MUX control signal for selecting first operand for ALU
-    output [2:0] ex_op_b_sel_o,  // MUX control signal for selecting second operand for ALU
-    output [`ALU_OP_LEN-1:0] alu_op_o,  // ALU operation
+    output logic [2:0] ex_op_b_sel_o,  // MUX control signal for selecting second operand for ALU
+    output logic [`ALU_OP_LEN-1:0] alu_op_o,  // ALU operation
 
-    output mem_req_o,  // Data memory request (part of load-store unit)
-    output mem_we_o,  // Data memory write enable (active 1)
-    output [2:0] mem_size_o,  // Selecting data memory read/write size (part of load-store unit)
+    output logic mem_req_o,  // Data memory request (part of load-store unit)
+    output logic mem_we_o,  // Data memory write enable (active 1)
+    output logic [2:0] mem_size_o,  // Selecting data memory read/write size (part of load-store unit)
 
-    output gpr_we_a_o,   // Reg file write enable
-    output wb_src_sel_o, //  MUX control signal for selecting data to write into reg file
+    output logic gpr_we_a_o,   // Reg file write enable
+    output logic wb_src_sel_o, //  MUX control signal for selecting data to write into reg file
 
     output logic illegal_instr_o,  // Illegal instruction signal
-    output branch_o,  // Conditional branch instruction signal
-    output jal_o,  // Unconditional branch instruction signal jal
-    output jalr_o  // Unconditional branch instruction signal jalr
+    output logic branch_o,  // Conditional branch instruction signal
+    output logic jal_o,  // Unconditional branch instruction signal jal
+    output logic jalr_o  // Unconditional branch instruction signal jalr
 );
 
   always_comb begin
@@ -183,7 +183,7 @@ module decoder_riscv (
             end
 
             `OP_IMM_FUNCT_3_SRAI: begin
-              if (fetched_instr_i[`I_TYPE_ALT_FUNCT_7] === OP_IMM_FUNCT_7_SRAI) begin
+              if (fetched_instr_i[`I_TYPE_ALT_FUNCT_7] === `OP_IMM_FUNCT_7_SRAI) begin
                 alu_op_o <= `ALU_SRA;
               end else begin
                 illegal_instr_o <= 1;
@@ -261,15 +261,15 @@ module decoder_riscv (
 
           case (fetched_instr_i[`S_TYPE_FUNCT_3])
             `STORE_FUNCT_3_SB: begin
-              mem_size_o <= LDST_B;
+              mem_size_o <= `LDST_B;
             end
 
             `STORE_FUNCT_3_SH: begin
-              mem_size_o <= LDST_H;
+              mem_size_o <= `LDST_H;
             end
 
             `STORE_FUNCT_3_SW: begin
-              mem_size_o <= LDST_W;
+              mem_size_o <= `LDST_W;
             end
 
             default: begin
