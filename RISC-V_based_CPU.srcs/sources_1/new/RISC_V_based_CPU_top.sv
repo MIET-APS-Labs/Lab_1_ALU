@@ -6,12 +6,55 @@ module RISC_V_based_CPU_top (
     input CLK100MHZ,
     input [15:0] SW,
 
-    output [ 6:0] C,
-    output [ 7:0] AN,
-    output [15:0] LED
+    //output [15:0] LED
+
+    output [6:0] C,
+    output [7:0] AN
+
 );
   logic rst;
   assign rst = SW[15];
+
+
+  // Main decoder
+
+  logic [1:0] ex_op_a_sel_o;
+  logic [2:0] ex_op_b_sel_o;
+  logic [`ALU_OP_LEN-1:0] alu_op_o;
+
+  logic mem_req_o;
+  logic mem_we_o;
+  logic [2:0] mem_size_o;
+
+  logic gpr_we_a_o;
+  logic wb_src_sel_o;
+
+  logic illegal_instr_o;
+  logic branch_o;
+  logic jal_o;
+  logic jalr_o;
+
+  decoder_riscv main_decoder (
+      .fetched_instr_i(instruction),
+
+      .ex_op_a_sel_o(ex_op_a_sel_o),
+      .ex_op_b_sel_o(ex_op_b_sel_o),
+      .alu_op_o(alu_op_o),
+
+      .mem_req_o (mem_req_o),
+      .mem_we_o  (mem_we_o),
+      .mem_size_o(mem_size_o),
+
+      .gpr_we_a_o  (gpr_we_a_o),
+      .wb_src_sel_o(wb_src_sel_o),
+
+      .illegal_instr_o(illegal_instr_o),
+      .branch_o(branch_o),
+      .jal_o(jal_o),
+      .jalr_o(jalr_o)
+  );
+
+
 
   // Instruction read-only memory
 
@@ -29,24 +72,6 @@ module RISC_V_based_CPU_top (
 
   logic [`WORD_LEN-1:0] reg_write_data;
 
-  always_comb begin
-    case (instruction[`C_COBRA_INSTR_WS])
-      2'b01: begin
-        reg_write_data = sw_val_ext;
-      end
-      2'b10: begin
-        reg_write_data = const_val_ext;
-      end
-      2'b11: begin
-        reg_write_data = ALU_res;
-      end
-
-      default: begin
-        reg_write_data = 0;
-      end
-    endcase
-  end
-
   reg_file #(`WORD_LEN,
   `RF_WIDTH
   ) my_reg_file (
@@ -61,13 +86,65 @@ module RISC_V_based_CPU_top (
       .rd2(reg_read_data2)
   );
 
-  // Const value sign extender
 
-  logic [`WORD_LEN-1:0] const_val_ext;
-  assign const_val_ext = {
-    {(`WORD_LEN - `CONST_LEN) {instruction[`C_COBRA_INSTR_CONST+(`CONST_LEN-1)]}},
-    instruction[`C_COBRA_INSTR_CONST]
+  // imm_I sign extender
+
+  logic [`WORD_LEN-1:0] imm_I;
+  assign imm_I = {
+    {(`WORD_LEN - `I_TYPE_IMM_LEN) {instruction[`I_TYPE_IMM+(`I_TYPE_IMM_LEN-1)]}},
+    instruction[`I_TYPE_IMM]
   };
+
+
+  // imm_S sign extender
+
+  logic [`WORD_LEN-1:0] imm_S;
+  assign imm_S = {
+    {(`WORD_LEN - `S_TYPE_IMM_11_5_LEN - `S_TYPE_IMM_4_0_LEN) {instruction[`S_TYPE_IMM_11_5+(`S_TYPE_IMM_11_5_LEN-1)]}},
+    instruction[`S_TYPE_IMM_11_5],
+    instruction[`S_TYPE_IMM_4_0]
+  };
+
+
+  // imm_J sign extender
+
+  logic [`WORD_LEN-1:0] imm_J;
+  assign imm_J = {
+    {(`WORD_LEN - `J_TYPE_IMM_LEN) {instruction[`J_TYPE_IMM_20]}},
+    instruction[`J_TYPE_IMM_20],
+    instruction[`J_TYPE_IMM_19_12],
+    instruction[`J_TYPE_IMM_11],
+    instruction[`J_TYPE_IMM_10_1],
+    0
+  };
+
+
+  // imm_U sign extender
+
+  logic [`WORD_LEN-1:0] imm_U;
+  assign imm_U = {instruction[`U_TYPE_IMM_31_12], {(`WORD_LEN - `U_TYPE_IMM_31_12_LEN) {0}}};
+
+
+  // imm_B sign extender
+
+  logic [`WORD_LEN-1:0] imm_B;
+  assign imm_B = {
+    {(`WORD_LEN - `B_TYPE_IMM_LEN) {instruction[`B_TYPE_IMM_12]}},
+    instruction[`B_TYPE_IMM_12],
+    instruction[`B_TYPE_IMM_11],
+    instruction[`B_TYPE_IMM_10_5],
+    instruction[`B_TYPE_IMM_4_1],
+    0
+  };
+
+
+
+
+
+  // // Switches value sign extender
+
+  // logic [`WORD_LEN-1:0] sw_val_ext;
+  // assign sw_val_ext = {{(`WORD_LEN - 15) {SW[14]}}, SW[14:0]};
 
 
 
@@ -76,16 +153,21 @@ module RISC_V_based_CPU_top (
 
   parameter COUNTER_WIDTH = $clog2(`INSTR_DEPTH);
   bit [COUNTER_WIDTH-1:0] PC;
+  logic [COUNTER_WIDTH-1:0] PC_increaser;
+  logic [`WORD_LEN-1:0] PC_increaser_select_imm;
+  assign PC_increaser_select_imm = branch_o ? imm_B : imm_J;
+  assign PC_increaser = ((branch_o && comp) || jal_o) ? PC_increaser_select_imm : `PC_NEXT_INSTR_INCREASE;
+
   always_ff @(posedge CLK100MHZ) begin
     if (~rst) begin
       //$display("\nReseted reg_read_data1 = %b\n", reg_read_data1);
       PC <= 0;
     end else begin
       //$display("SW: %b\nReset: %b\nProgram counter: %d", SW, rst, PC);
-      if ((instruction[`C_COBRA_INSTR_C] & ALU_flag) | instruction[`C_COBRA_INSTR_B]) begin
-        PC <= PC + const_val_ext;
+      if (jalr_o) begin
+        PC <= reg_read_data1 + imm_I;
       end else begin
-        PC <= PC + 1;
+        PC <= PC + PC_increaser;
       end
     end
 
@@ -101,33 +183,70 @@ module RISC_V_based_CPU_top (
 
 
 
-  // Switches value sign extender
-
-  logic [`WORD_LEN-1:0] sw_val_ext;
-  assign sw_val_ext = {{(`WORD_LEN - 15) {SW[14]}}, SW[14:0]};
-
-
-
-
 
   // ALU
 
-  logic ALU_flag;
+  logic comp;
   logic [`WORD_LEN-1:0] ALU_res;
-  alu #(`WORD_LEN, `ALU_OP_LEN) my_alu (
-      .A(reg_read_data1),
-      .B(reg_read_data2),
-      .ALUOp(instruction[`C_COBRA_INSTR_ALUop]),
+  logic [`WORD_LEN-1:0] ALU_A_operand;
+  logic [`WORD_LEN-1:0] ALU_B_operand;
 
-      .Flag  (ALU_flag),
+  always_comb begin
+    ALU_A_operand <= 0;
+    case (ex_op_a_sel_o)
+      `OP_A_RS1: begin
+        ALU_A_operand <= reg_read_data1;
+      end
+      `OP_A_CURR_PC: begin
+        ALU_A_operand <= PC;
+      end
+      `OP_A_ZERO: begin
+        ALU_A_operand <= 0;
+      end
+      default: begin
+        ALU_A_operand <= 0;
+      end
+    endcase
+  end
+
+  always_comb begin
+    ALU_B_operand <= 0;
+    case (ex_op_b_sel_o)
+      `OP_B_RS2: begin
+        ALU_B_operand <= reg_read_data2;
+      end
+      `OP_B_IMM_I: begin
+        ALU_B_operand <= imm_I;
+      end
+      `OP_B_IMM_U: begin
+        ALU_B_operand <= imm_U;
+      end
+      `OP_B_IMM_S: begin
+        ALU_B_operand <= imm_S;
+      end
+      `OP_B_INCR: begin
+        ALU_B_operand <= `PC_NEXT_INSTR_INCREASE;
+      end
+      default: begin
+        ALU_B_operand <= 0;
+      end
+    endcase
+  end
+
+  alu #(`WORD_LEN, `ALU_OP_LEN) my_alu (
+      .A(ALU_A_operand),
+      .B(ALU_B_operand),
+      .ALUOp(alu_op_o),
+
+      .Flag  (comp),
       .Result(ALU_res)
   );
 
 
 
 
-  assign LED[5:0]  = PC;
-  assign LED[15:6] = reg_read_data1[9:0];
+  //assign LED[5:0]  = PC;
+  //assign LED[15:6] = reg_read_data1[9:0];
 
 
   disp_HEX my_disp_HEX (
