@@ -1,5 +1,7 @@
 `define WORD_LEN 32
 
+`define RESET_ADDR 32'h00000000
+
 //////////////////////////////////////////////
 //  ALU Defines
 
@@ -7,34 +9,34 @@
 `define ALU_OP_NUM 16
 
 // ALU op code format flag_sub_opcode
-`define ADD 5'b 00000
-`define SUB 5'b 01000
+`define ALU_ADD 5'b 00000
+`define ALU_SUB 5'b 01000
 
 // comparisons
-`define SLT 5'b 01001
-`define SLTU 5'b 01010
+`define ALU_SLT 5'b 01001
+`define ALU_SLTU 5'b 01010
 
 // shifts
-`define SLL 5'b 00001
-`define SRL 5'b 00011
-`define SRA 5'b 00100
+`define ALU_SLL 5'b 00001
+`define ALU_SRL 5'b 00011
+`define ALU_SRA 5'b 00100
 
 // logic
 
-`define XOR 5'b 00101
-`define OR 5'b 00110
-`define AND 5'b 00111
+`define ALU_XOR 5'b 00101
+`define ALU_OR 5'b 00110
+`define ALU_AND 5'b 00111
 
-`define BEQ 5'b 10000
-`define BNE 5'b 10001
-`define BLT 5'b 11000
-`define BGE 5'b 11001
-`define BLTU 5'b 11010
-`define BGEU 5'b 11011
+`define ALU_BEQ 5'b 10000
+`define ALU_BNE 5'b 10001
+`define ALU_BLT 5'b 11000
+`define ALU_BGE 5'b 11001
+`define ALU_BLTU 5'b 11010
+`define ALU_BGEU 5'b 11011
 
 //  SIMD op codes
-`define SIMD_ADD 5'b 10010	
-`define SIMD_SUB 5'b 11100
+`define ALU_SIMD_ADD 5'b 10010	
+`define ALU_SIMD_SUB 5'b 11100
 
 /////////////////////////////////////////////
 
@@ -79,4 +81,55 @@
 
 
 //////////////////////////////////////////////
+
+
+//////////////////////////////////////////////
+// RISC-V Instuction format
+
+`define INSTR_OPCODE 6:3
+`define INSTR_INSTR_LEN 2:0
+
+`define INSTR_LEN 2'b11
+
+// R-type instruction format
+// funct7[31:25] rs2[24:20] rs1[19:15] funct3[14:12] rd[11:7] opcode[6:0]
+`define R_TYPE_FUNCT_7 31:25
+`define R_TYPE_RS_2 24:20
+`define R_TYPE_RS_1 19:15
+`define R_TYPE_FUNCT_3 14:12
+`define R_TYPE_RD 11:7
+
+// I-type instruction format
+// imm[31:20] rs1[19:15] funct3[14:12] rd[11:7] opcode[6:0]
+`define I_TYPE_IMM 31:20
+`define I_TYPE_RS_1 19:15
+`define I_TYPE_FUNCT_3 14:12
+`define I_TYPE_ALT_FUNCT_7 31:25
+`define I_TYPE_RD 11:7
+
+// S-type instruction format
+// imm[11:5]_[31:25] rs2[24:20] rs1[19:15] funct3[14:12] imm[4:0]_[11:7] opcode[6:0]
+`define S_TYPE_IMM_11_5 31:25
+`define S_TYPE_RS_2 24:20
+`define S_TYPE_RS_1 19:15
+`define S_TYPE_FUNCT_3 14:12
+`define S_TYPE_IMM_4_0 11:7
+
+// B-type instruction format
+// imm[12|10:5]_[31:25] rs2[24:20] rs1[19:15] funct3[14:12] imm[4:1|11]_[11:7] opcode[6:0]
+`define B_TYPE_IMM_12_10_5 31:25
+`define B_TYPE_RS_2 24:20
+`define B_TYPE_RS_1 19:15
+`define B_TYPE_FUNCT_3 14:12
+`define B_TYPE_IMM_4_1_11 11:7
+
+// U-type instruction format
+// imm[31:12]_[31:12] rd[11:7] opcode[6:0]
+`define U_TYPE_IMM_31_12 31:12
+`define U_TYPE_RD 11:7
+
+// J-type instruction format
+// imm[20|10:1|11|19:12]_[31:12] rd[11:7] opcode[6:0]
+`define J_TYPE_IMM_20_10_1_11_19_12 31:12
+`define J_TYPE_RD 11:7
 

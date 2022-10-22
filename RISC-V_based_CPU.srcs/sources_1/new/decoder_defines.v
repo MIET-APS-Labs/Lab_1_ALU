@@ -1,49 +1,3 @@
-`define INSTR_OPCODE 6:3
-`define INSTR_INSTR_LEN 2:0
-
-`define INSTR_LEN 2'b11
-
-// R-type instruction format
-// funct7[31:25] rs2[24:20] rs1[19:15] funct3[14:12] rd[11:7] opcode[6:0]
-`define R_TYPE_FUNCT_7 31:25
-`define R_TYPE_RS_2 24:20
-`define R_TYPE_RS_1 19:15
-`define R_TYPE_FUNCT_3 14:12
-`define R_TYPE_RD 11:7
-
-// I-type instruction format
-// imm[31:20] rs1[19:15] funct3[14:12] rd[11:7] opcode[6:0]
-`define I_TYPE_IMM 31:20
-`define I_TYPE_RS_1 19:15
-`define I_TYPE_FUNCT_3 14:12
-`define I_TYPE_RD 11:7
-
-// S-type instruction format
-// imm[11:5]_[31:25] rs2[24:20] rs1[19:15] funct3[14:12] imm[4:0]_[11:7] opcode[6:0]
-`define S_TYPE_IMM_11_5 31:25
-`define S_TYPE_RS_2 24:20
-`define S_TYPE_RS_1 19:15
-`define S_TYPE_FUNCT_3 14:12
-`define S_TYPE_IMM_4_0 11:7
-
-// B-type instruction format
-// imm[12|10:5]_[31:25] rs2[24:20] rs1[19:15] funct3[14:12] imm[4:1|11]_[11:7] opcode[6:0]
-`define B_TYPE_IMM_12_10_5 31:25
-`define B_TYPE_RS_2 24:20
-`define B_TYPE_RS_1 19:15
-`define B_TYPE_FUNCT_3 14:12
-`define B_TYPE_IMM_4_1_11 11:7
-
-// U-type instruction format
-// imm[31:12]_[31:12] rd[11:7] opcode[6:0]
-`define U_TYPE_IMM_31_12 31:12
-`define U_TYPE_RD 11:7
-
-// J-type instruction format
-// imm[20|10:1|11|19:12]_[31:12] rd[11:7] opcode[6:0]
-`define J_TYPE_IMM_20_10_1_11_19_12 31:12
-`define J_TYPE_RD 11:7
-
 // opcodes
 
 `define OP_OPCODE 5'b01_100
@@ -83,7 +37,7 @@
 
 `define OP_IMM_FUNCT_7_SLLI 2'h00
 `define OP_IMM_FUNCT_7_SRLI 2'h00
-`define OP_IMM_FUNCT_7_SLAI 2'h20
+`define OP_IMM_FUNCT_7_SRAI 2'h20
 
 
 `define LUI_OPCODE 5'b01_101
