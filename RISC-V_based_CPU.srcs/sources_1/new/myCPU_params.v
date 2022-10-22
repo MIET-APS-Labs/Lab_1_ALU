@@ -2,6 +2,8 @@
 
 `define RESET_ADDR 32'h00000000
 
+`define PC_NEXT_INSTR_INCREASE 4
+
 //////////////////////////////////////////////
 //  ALU Defines
 
@@ -101,6 +103,7 @@
 
 // I-type instruction format
 // imm[31:20] rs1[19:15] funct3[14:12] rd[11:7] opcode[6:0]
+`define I_TYPE_IMM_LEN 12
 `define I_TYPE_IMM 31:20
 `define I_TYPE_RS_1 19:15
 `define I_TYPE_FUNCT_3 14:12
@@ -109,27 +112,57 @@
 
 // S-type instruction format
 // imm[11:5]_[31:25] rs2[24:20] rs1[19:15] funct3[14:12] imm[4:0]_[11:7] opcode[6:0]
+`define S_TYPE_IMM_11_5_LEN 7
 `define S_TYPE_IMM_11_5 31:25
 `define S_TYPE_RS_2 24:20
 `define S_TYPE_RS_1 19:15
 `define S_TYPE_FUNCT_3 14:12
+`define S_TYPE_IMM_4_0_LEN 5
 `define S_TYPE_IMM_4_0 11:7
 
 // B-type instruction format
 // imm[12|10:5]_[31:25] rs2[24:20] rs1[19:15] funct3[14:12] imm[4:1|11]_[11:7] opcode[6:0]
-`define B_TYPE_IMM_12_10_5 31:25
+`define B_TYPE_IMM_LEN 13
+`define B_TYPE_IMM_12 31
+`define B_TYPE_IMM_10_5 30:25
 `define B_TYPE_RS_2 24:20
 `define B_TYPE_RS_1 19:15
 `define B_TYPE_FUNCT_3 14:12
-`define B_TYPE_IMM_4_1_11 11:7
+`define B_TYPE_IMM_4_1 11:8
+`define B_TYPE_IMM_11 7
 
 // U-type instruction format
 // imm[31:12]_[31:12] rd[11:7] opcode[6:0]
+`define U_TYPE_IMM_31_12_LEN 20
 `define U_TYPE_IMM_31_12 31:12
 `define U_TYPE_RD 11:7
 
 // J-type instruction format
 // imm[20|10:1|11|19:12]_[31:12] rd[11:7] opcode[6:0]
-`define J_TYPE_IMM_20_10_1_11_19_12 31:12
+`define J_TYPE_IMM_LEN 20
+`define J_TYPE_IMM_20 31
+`define J_TYPE_IMM_10_1 30:21
+`define J_TYPE_IMM_11 20
+`define J_TYPE_IMM_19_12 19:12
 `define J_TYPE_RD 11:7
+
+
+
+//////////////////////////////////////////////
+// MUX Cases
+// operand a selection
+`define OP_A_RS1 2'b00
+`define OP_A_CURR_PC 2'b01
+`define OP_A_ZERO 2'b10
+
+// operand b selection
+`define OP_B_RS2 3'b000
+`define OP_B_IMM_I 3'b001
+`define OP_B_IMM_U 3'b010
+`define OP_B_IMM_S 3'b011
+`define OP_B_INCR 3'b100
+
+// writeback source selection
+`define WB_EX_RESULT 1'b0
+`define WB_LSU_DATA 1'b1
 

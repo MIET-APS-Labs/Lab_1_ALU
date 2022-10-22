@@ -91,18 +91,3 @@
 `define LDST_BU 3'b100
 `define LDST_HU 3'b101
 
-// operand a selection
-`define OP_A_RS1 2'b00
-`define OP_A_CURR_PC 2'b01
-`define OP_A_ZERO 2'b10
-
-// operand b selection
-`define OP_B_RS2 3'b000
-`define OP_B_IMM_I 3'b001
-`define OP_B_IMM_U 3'b010
-`define OP_B_IMM_S 3'b011
-`define OP_B_INCR 3'b100
-
-// writeback source selection
-`define WB_EX_RESULT 1'b0
-`define WB_LSU_DATA 1'b1
