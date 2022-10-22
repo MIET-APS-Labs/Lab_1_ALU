@@ -44,92 +44,92 @@ module alu #(
 
   always_comb begin
     case (ALUOp)
-      `ADD: begin  // Add numbers
+      `ALU_ADD: begin  // Add numbers
         Result = adder_res;
         Flag   = adder_carry_out;
       end
 
-      `SUB: begin  // Substract numbers
+      `ALU_SUB: begin  // Substract numbers
         Result = adder_res;
         Flag   = 0;
       end
 
-      `SLT: begin  // Set less then
+      `ALU_SLT: begin  // Set less then
         Result = adder_res[WORD_LEN-1];
         Flag   = 0;
       end
 
-      `SLTU: begin  // Set less then unsigned
+      `ALU_SLTU: begin  // Set less then unsigned
         Result = adder_res[WORD_LEN-1];
         Flag   = 0;
       end
 
-      `SLL: begin  // Shift left logic
+      `ALU_SLL: begin  // Shift left logic
         Result = (A << B);
         Flag   = 0;
       end
 
-      `SRL: begin  // Shift right logic
+      `ALU_SRL: begin  // Shift right logic
         Result = (A >> B);
         Flag   = 0;
       end
 
-      `SRA: begin  // Shift right arithmetic
+      `ALU_SRA: begin  // Shift right arithmetic
         Result = ($signed(A) >>> B);
         Flag   = 0;
       end
 
-      `XOR: begin
+      `ALU_XOR: begin
         Result = (A ^ B);
         Flag   = 0;
       end
 
-      `OR: begin
+      `ALU_OR: begin
         Result = (A | B);
         Flag   = 0;
       end
 
-      `AND: begin
+      `ALU_AND: begin
         Result = (A & B);
         Flag   = 0;
       end
 
-      `BEQ: begin  // Branch equal
+      `ALU_BEQ: begin  // Branch equal
         Result = 0;
         Flag   = (A == B);
       end
 
-      `BNE: begin  // Branch not equal
+      `ALU_BNE: begin  // Branch not equal
         Result = 0;
         Flag   = (A != B);
       end
 
-      `BLT: begin  // Branch less then
+      `ALU_BLT: begin  // Branch less then
         Result = 0;
         Flag   = adder_res[WORD_LEN-1];
       end
 
-      `BGE: begin  // Branch greater equal
+      `ALU_BGE: begin  // Branch greater equal
         Result = 0;
         Flag   = ~adder_res[WORD_LEN-1];
       end
 
-      `BLTU: begin  // Branch less then unsigned
+      `ALU_BLTU: begin  // Branch less then unsigned
         Result = 0;
         Flag   = adder_res[WORD_LEN-1];
       end
 
-      `BGEU: begin  // Branch greater equal unsigned
+      `ALU_BGEU: begin  // Branch greater equal unsigned
         Result = 0;
         Flag   = ~adder_res[WORD_LEN-1];
       end
 
-      `SIMD_ADD: begin
+      `ALU_SIMD_ADD: begin
         Result = SIMD_res;
         Flag   = 0;
       end
 
-      `SIMD_SUB: begin
+      `ALU_SIMD_SUB: begin
         Result = SIMD_res;
         Flag   = 0;
       end
