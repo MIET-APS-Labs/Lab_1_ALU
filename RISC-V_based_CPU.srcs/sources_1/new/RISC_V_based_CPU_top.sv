@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-`include "myCPU_params.v"
+`include "defines_riscv.v"
 
 module RISC_V_based_CPU_top (
     input CLK100MHZ,
@@ -20,7 +20,7 @@ module RISC_V_based_CPU_top (
 
   logic [1:0] ex_op_a_sel_o;
   logic [2:0] ex_op_b_sel_o;
-  logic [`ALU_OP_LEN-1:0] alu_op_o;
+  logic [`ALU_OP_WIDTH-1:0] alu_op_o;
 
   logic mem_req_o;
   logic mem_we_o;
@@ -72,6 +72,8 @@ module RISC_V_based_CPU_top (
 
   logic [`WORD_LEN-1:0] reg_write_data;
 
+  assign reg_write_data = wb_src_sel_o ? data_read : ALU_res;
+
   reg_file #(`WORD_LEN,
   `RF_WIDTH
   ) my_reg_file (
@@ -84,6 +86,24 @@ module RISC_V_based_CPU_top (
 
       .rd1(reg_read_data1),
       .rd2(reg_read_data2)
+  );
+
+
+  // Data memory
+
+  logic [`WORD_LEN-1:0] data_read;
+
+  data_mem #(
+  `WORD_LEN
+  ) my_data_mem (
+      .clk(CLK100MHZ),
+      .adr(ALU_res),  // read/write address
+      .wd(reg_read_data2),  // Write Data
+      .we(mem_we_o),  // Write Enable
+      .size(mem_req_o & mem_size_o),  // Write Enable
+
+      .rd(data_read)  // Read Data
+
   );
 
 
@@ -233,7 +253,7 @@ module RISC_V_based_CPU_top (
     endcase
   end
 
-  alu #(`WORD_LEN, `ALU_OP_LEN) my_alu (
+  alu #(`WORD_LEN, `ALU_OP_WIDTH) my_alu (
       .A(ALU_A_operand),
       .B(ALU_B_operand),
       .ALUOp(alu_op_o),
