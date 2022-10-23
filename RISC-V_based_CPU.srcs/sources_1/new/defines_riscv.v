@@ -7,7 +7,7 @@
 //////////////////////////////////////////////
 //  ALU Defines
 
-`define ALU_OP_LEN 5
+`define ALU_OP_WIDTH 5
 `define ALU_OP_NUM 16
 
 // ALU op code format flag_sub_opcode
@@ -88,8 +88,8 @@
 //////////////////////////////////////////////
 // RISC-V Instuction format
 
-`define INSTR_OPCODE 6:3
-`define INSTR_INSTR_LEN 2:0
+`define INSTR_OPCODE 6:2
+`define INSTR_INSTR_LEN 1:0
 
 `define INSTR_LEN 2'b11
 
@@ -103,6 +103,7 @@
 
 // I-type instruction format
 // imm[31:20] rs1[19:15] funct3[14:12] rd[11:7] opcode[6:0]
+// I*-type funct7[31:25] shamt[24:20] rs1[19:15] funct3[14:12] rd[11:7] opcode[6:0]
 `define I_TYPE_IMM_LEN 12
 `define I_TYPE_IMM 31:20
 `define I_TYPE_RS_1 19:15
@@ -165,4 +166,102 @@
 // writeback source selection
 `define WB_EX_RESULT 1'b0
 `define WB_LSU_DATA 1'b1
+
+
+
+//////////////////////////////////////////////
+// Main decoder defines
+
+// opcodes
+
+`define OP_OPCODE 5'b01_100
+
+`define OP_FUNCT_3_ADD_SUB 3'h0
+`define OP_FUNCT_3_XOR 3'h4
+`define OP_FUNCT_3_OR 3'h6
+`define OP_FUNCT_3_AND 3'h7
+`define OP_FUNCT_3_SLL 3'h1
+`define OP_FUNCT_3_SRL_SRA 3'h5
+`define OP_FUNCT_3_SLT 3'h2
+`define OP_FUNCT_3_SLTU 3'h3
+
+`define OP_FUNCT_7_ADD 7'h00
+`define OP_FUNCT_7_SUB 7'h20
+`define OP_FUNCT_7_XOR 7'h00
+`define OP_FUNCT_7_OR 7'h00
+`define OP_FUNCT_7_AND 7'h00
+`define OP_FUNCT_7_SLL 7'h00
+`define OP_FUNCT_7_SRL 7'h00
+`define OP_FUNCT_7_SRA 7'h20
+`define OP_FUNCT_7_SLT 7'h00
+`define OP_FUNCT_7_SLTU 7'h00
+
+
+`define OP_IMM_OPCODE 5'b00_100
+
+`define OP_IMM_FUNCT_3_ADDI 3'h0
+`define OP_IMM_FUNCT_3_XORI 3'h4
+`define OP_IMM_FUNCT_3_ORI 3'h6
+`define OP_IMM_FUNCT_3_ANDI 3'h7
+`define OP_IMM_FUNCT_3_SLLI 3'h1
+`define OP_IMM_FUNCT_3_SRLI 3'h5
+`define OP_IMM_FUNCT_3_SRAI 3'h5
+`define OP_IMM_FUNCT_3_SLTI 3'h2
+`define OP_IMM_FUNCT_3_SLTIU 3'h3
+
+`define OP_IMM_FUNCT_7_SLLI 7'h00
+`define OP_IMM_FUNCT_7_SRLI 7'h00
+`define OP_IMM_FUNCT_7_SRAI 7'h20
+
+
+`define LUI_OPCODE 5'b01_101
+
+
+`define LOAD_OPCODE 5'b00_000
+
+`define LOAD_FUNCT_3_LB 3'h0
+`define LOAD_FUNCT_3_LH 3'h1
+`define LOAD_FUNCT_3_LW 3'h2
+`define LOAD_FUNCT_3_LBU 3'h4
+`define LOAD_FUNCT_3_LHU 3'h5
+
+
+`define STORE_OPCODE 5'b01_000
+
+`define STORE_FUNCT_3_SB 3'h0
+`define STORE_FUNCT_3_SH 3'h1
+`define STORE_FUNCT_3_SW 3'h2
+
+
+`define BRANCH_OPCODE 5'b11_000
+
+`define BRANCH_FUNCT_3_BEQ 3'h0
+`define BRANCH_FUNCT_3_BNE 3'h1
+`define BRANCH_FUNCT_3_BLT 3'h4
+`define BRANCH_FUNCT_3_BGE 3'h5
+`define BRANCH_FUNCT_3_BLTU 3'h6
+`define BRANCH_FUNCT_3_BGEU 3'h7
+
+
+`define JAL_OPCODE 5'b11_011
+
+
+`define JALR_OPCODE 5'b11_001
+`define JALR_FUNCT_3_SLTU 3'h0
+
+
+`define AUIPC_OPCODE 5'b00_101
+
+
+`define MISC_MEM_OPCODE 5'b00_011
+
+
+`define SYSTEM_OPCODE 5'b11_100
+
+// dmem type load store
+`define LDST_B 3'b000
+`define LDST_H 3'b001
+`define LDST_W 3'b010
+`define LDST_BU 3'b100
+`define LDST_HU 3'b101
 
