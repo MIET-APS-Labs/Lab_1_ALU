@@ -1,14 +1,13 @@
 `timescale 1ns / 1ps
 
-`include "myCPU_params.v"
-`include "decoder_defines.v"
+`include "defines_riscv.v"
 
 module decoder_riscv (
     input [`WORD_LEN-1:0] fetched_instr_i,  // Instruction for decoding, read from instr_rom
 
     output logic [1:0] ex_op_a_sel_o,  // MUX control signal for selecting first operand for ALU
     output logic [2:0] ex_op_b_sel_o,  // MUX control signal for selecting second operand for ALU
-    output logic [`ALU_OP_LEN-1:0] alu_op_o,  // ALU operation
+    output logic [`ALU_OP_WIDTH-1:0] alu_op_o,  // ALU operation
 
     output logic mem_req_o,  // Data memory request (part of load-store unit)
     output logic mem_we_o,  // Data memory write enable (active 1)
@@ -358,11 +357,11 @@ module decoder_riscv (
         end
 
         `MISC_MEM_OPCODE: begin
-          illegal_instr_o <= 1;
+          illegal_instr_o <= 0;
         end
 
         `SYSTEM_OPCODE: begin
-          illegal_instr_o <= 1;
+          illegal_instr_o <= 0;
         end
         default: begin
           illegal_instr_o <= 1;
