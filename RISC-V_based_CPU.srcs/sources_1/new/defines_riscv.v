@@ -60,6 +60,21 @@
 //////////////////////////////////////////////
 
 
+
+//////////////////////////////////////////////
+//  Data Memory Defines
+
+`define MEM_TYPE_LOAD_STORE_BIT 3
+`define MEM_WIDTH 256
+
+// dmem type load store
+`define LDST_B 3'b000
+`define LDST_H 3'b001
+`define LDST_W 3'b010
+`define LDST_BU 3'b100
+`define LDST_HU 3'b101
+//////////////////////////////////////////////
+
 //////////////////////////////////////////////
 //  CYBERcobra 3000 Pro 2.0 Instuction format
 // B[31] C[30] WS[29:28] ALUop[27:23] RA1[22:18] RA2[17:13] CONST[12:5] WA[4:0]
@@ -257,11 +272,4 @@
 
 
 `define SYSTEM_OPCODE 5'b11_100
-
-// dmem type load store
-`define LDST_B 3'b000
-`define LDST_H 3'b001
-`define LDST_W 3'b010
-`define LDST_BU 3'b100
-`define LDST_HU 3'b101
 
