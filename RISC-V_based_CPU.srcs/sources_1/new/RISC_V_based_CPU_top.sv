@@ -93,11 +93,11 @@ module RISC_V_based_CPU_top (
 
   logic [`WORD_LEN-1:0] data_read;
 
-  data_mem #(
-  `WORD_LEN
+  data_mem #(`WORD_LEN, `MEM_TYPE_LOAD_STORE_BIT,
+  `MEM_WIDTH
   ) my_data_mem (
       .clk(CLK100MHZ),
-      .adr(ALU_res),  // read/write address
+      .adr(ALU_res[$clog2(`MEM_WIDTH)+1:2]),  // read/write address
       .wd(reg_read_data2),  // Write Data
       .we(mem_we_o),  // Write Enable
       .size(mem_req_o & mem_size_o),  // Write Enable
