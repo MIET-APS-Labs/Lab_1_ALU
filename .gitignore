@@ -18,6 +18,10 @@
 *.Xil/
 *behav/
 
+
+!/Assembler_progs/*
+
+
 #Source files:
 #Do NOT ignore VHDL, Verilog, block diagrams or EDIF files.
 !*.vhd
