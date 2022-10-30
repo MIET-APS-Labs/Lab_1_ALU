@@ -47,7 +47,7 @@
 //////////////////////////////////////////////
 //  Register File Defines
 
-`define RF_WIDTH 32
+`define RF_DEPTH 32
 //////////////////////////////////////////////
 
 
@@ -62,10 +62,10 @@
 
 
 //////////////////////////////////////////////
-//  Data Memory Defines
+//  Byte addressable Data Memory Defines
 
 `define MEM_TYPE_LOAD_STORE_BIT 3
-`define MEM_WIDTH 256
+`define MEM_DEPTH 1024 // in bytes
 
 // dmem type load store
 `define LDST_B 3'b000
