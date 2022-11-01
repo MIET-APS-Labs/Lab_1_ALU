@@ -2,7 +2,7 @@
 
 `define RESET_ADDR 32'h00000000
 
-`define PC_NEXT_INSTR_INCREASE 4
+`define PC_NEXT_INSTR_INCREASE 3'd4
 
 //////////////////////////////////////////////
 //  ALU Defines
@@ -56,7 +56,7 @@
 //  Instruction ROM Defines
 
 `define INSTR_WIDTH 32
-`define INSTR_DEPTH 64
+`define INSTR_DEPTH 512
 //////////////////////////////////////////////
 
 
@@ -104,6 +104,9 @@
 // RISC-V Instuction format
 
 `define INSTR_OPCODE 6:2
+`define INSTR_RS_1 19:15
+`define INSTR_RS_2 24:20
+`define INSTR_A3 11:7
 `define INSTR_INSTR_LEN 1:0
 
 `define INSTR_LEN 2'b11
