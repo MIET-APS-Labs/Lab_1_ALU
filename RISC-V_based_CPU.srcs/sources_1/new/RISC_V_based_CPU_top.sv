@@ -2,11 +2,13 @@
 
 `include "defines_riscv.v"
 
-module RISC_V_based_CPU_top (
+module RISC_V_based_CPU_top #(
+    parameter DEBUG = 0
+) (
     input CLK100MHZ,
     input [15:0] SW,
 
-    //output [15:0] LED
+    output [15:0] LED,
 
     output [6:0] C,
     output [7:0] AN
@@ -59,9 +61,9 @@ module RISC_V_based_CPU_top (
   // Instruction read-only memory
 
   logic [`WORD_LEN-1:0] instruction;
-  instr_rom #(`INSTR_WIDTH, `INSTR_DEPTH) my_instr_rom (
-      .addr(PC),
-      .rd  (instruction)
+  instr_rom #(`WORD_LEN, `INSTR_DEPTH, "prog.txt") my_instr_rom (
+      .adr(PC),
+      .rd (instruction)
   );
 
 
@@ -75,14 +77,14 @@ module RISC_V_based_CPU_top (
   assign reg_write_data = wb_src_sel_o ? data_read : ALU_res;
 
   reg_file #(`WORD_LEN,
-  `RF_WIDTH
+  `RF_DEPTH
   ) my_reg_file (
       .clk (CLK100MHZ),
-      .adr1(instruction[`C_COBRA_INSTR_RA1]),
-      .adr2(instruction[`C_COBRA_INSTR_RA2]),
-      .adr3(instruction[`C_COBRA_INSTR_WA]),
+      .adr1(instruction[`INSTR_RS_1]),
+      .adr2(instruction[`INSTR_RS_2]),
+      .adr3(instruction[`INSTR_A3]),
       .wd3 (reg_write_data),
-      .we3 (instruction[`C_COBRA_INSTR_WS_1] | instruction[`C_COBRA_INSTR_WS_2]),
+      .we3 (gpr_we_a_o),
 
       .rd1(reg_read_data1),
       .rd2(reg_read_data2)
@@ -93,11 +95,11 @@ module RISC_V_based_CPU_top (
 
   logic [`WORD_LEN-1:0] data_read;
 
-  data_mem #(`WORD_LEN, `MEM_TYPE_LOAD_STORE_BIT,
-  `MEM_WIDTH
+  byte_data_mem #(`WORD_LEN, `MEM_TYPE_LOAD_STORE_BIT,
+  `MEM_DEPTH
   ) my_data_mem (
       .clk(CLK100MHZ),
-      .adr(ALU_res[$clog2(`MEM_WIDTH)+1:2]),  // read/write address
+      .adr(ALU_res[$clog2(`MEM_DEPTH)+1:2]),  // read/write address
       .wd(reg_read_data2),  // Write Data
       .we(mem_we_o),  // Write Enable
       .size(mem_req_o & mem_size_o),  // Write Enable
@@ -176,27 +178,26 @@ module RISC_V_based_CPU_top (
   logic [COUNTER_WIDTH-1:0] PC_increaser;
   logic [`WORD_LEN-1:0] PC_increaser_select_imm;
   assign PC_increaser_select_imm = branch_o ? imm_B : imm_J;
-  assign PC_increaser = ((branch_o && comp) || jal_o) ? PC_increaser_select_imm : `PC_NEXT_INSTR_INCREASE;
-
+  //assign PC_increaser = ((branch_o && comp) || jal_o) ? PC_increaser_select_imm : `PC_NEXT_INSTR_INCREASE;
+  assign PC_increaser = ((branch_o && comp) || jal_o) ? PC_increaser_select_imm : 9'd4;
   always_ff @(posedge CLK100MHZ) begin
     if (~rst) begin
-      //$display("\nReseted reg_read_data1 = %b\n", reg_read_data1);
+      if (DEBUG) begin
+        $display("\nReseted reg_read_data1 = %b\n", reg_read_data1);
+      end
       PC <= 0;
     end else begin
-      //$display("SW: %b\nReset: %b\nProgram counter: %d", SW, rst, PC);
+      if (DEBUG) begin
+        $display("SW: %b\nReset: %b\nProgram counter: %d\n", SW, rst, PC);
+        $display("PC_increaser_select_imm = %d, PC_increaser = %b", PC_increaser_select_imm,
+                 PC_increaser);
+      end
       if (jalr_o) begin
         PC <= reg_read_data1 + imm_I;
       end else begin
         PC <= PC + PC_increaser;
       end
     end
-
-    // B[31] C[30] WS[29:28] ALUop[27:23] RA1[22:18] RA2[17:13] CONST[12:5] WA[4:0]
-    // $display(
-    //     "PC = %d; B = %b; C = %b; WS = %b; ALUop = %b; RA1 = %b; RA2 = %b; CONST = %b; WA = %b",
-    //     PC, instruction[`C_COBRA_INSTR_B], instruction[`C_COBRA_INSTR_C], instruction[`C_COBRA_INSTR_WS],
-    //     instruction[`C_COBRA_INSTR_ALUop], instruction[`C_COBRA_INSTR_RA1], instruction[`C_COBRA_INSTR_RA2],
-    //     instruction[`C_COBRA_INSTR_CONST], instruction[`C_COBRA_INSTR_WA]);
 
   end
 

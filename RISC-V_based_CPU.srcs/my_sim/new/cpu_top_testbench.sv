@@ -2,6 +2,9 @@
 
 `define SWITCHES_NON_RST 16'b1000000000000010   // = 2
 `define SWITCHES_RST 16'b0000000000000000   // = 0
+`define INSTR_NUM 10
+
+`define DEBUG_ON 1
 
 module cpu_top_testbench ();
 
@@ -18,15 +21,21 @@ module cpu_top_testbench ();
     #(PERIOD / 2) CLK = 1'b1;
     #(PERIOD / 2);
   end
-
-  always begin
-    sw = `SWITCHES_NON_RST;
-    #100000;
-    sw = `SWITCHES_RST;
-    #100000;
+  assign sw = `SWITCHES_NON_RST;
+  //  always begin
+  //    sw = `SWITCHES_NON_RST;
+  //    #100000;
+  //    sw = `SWITCHES_RST;
+  //    #100000;
+  //  end
+  initial begin
+    for (int i = 0; i < `INSTR_NUM; i++) begin
+      @(posedge CLK);
+    end
+    $finish;
   end
 
-  RISC_V_based_CPU_top dut (
+  RISC_V_based_CPU_top #(`DEBUG_ON) dut (
       .CLK100MHZ(CLK),
       .SW(sw),
 
