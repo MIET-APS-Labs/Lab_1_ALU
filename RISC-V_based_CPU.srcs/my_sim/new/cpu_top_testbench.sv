@@ -2,7 +2,7 @@
 
 `define SWITCHES_NON_RST 16'b1000000000000010   // = 2
 `define SWITCHES_RST 16'b0000000000000000   // = 0
-`define INSTR_NUM 10
+`define APPROX_INSTR_NUM 100
 
 `define DEBUG_ON 1
 
@@ -14,6 +14,8 @@ module cpu_top_testbench ();
 
   logic [15:0] sw;
 
+  logic prog_finished;
+
   logic CLK;
   parameter PERIOD = 20;
   always begin
@@ -21,6 +23,7 @@ module cpu_top_testbench ();
     #(PERIOD / 2) CLK = 1'b1;
     #(PERIOD / 2);
   end
+
   assign sw = `SWITCHES_NON_RST;
   //  always begin
   //    sw = `SWITCHES_NON_RST;
@@ -28,8 +31,12 @@ module cpu_top_testbench ();
   //    sw = `SWITCHES_RST;
   //    #100000;
   //  end
+
   initial begin
-    for (int i = 0; i < `INSTR_NUM; i++) begin
+    for (int i = 0; i < `APPROX_INSTR_NUM; i++) begin
+      if (prog_finished) begin
+        $finish;
+      end
       @(posedge CLK);
     end
     $finish;
@@ -41,6 +48,8 @@ module cpu_top_testbench ();
 
       .C  (hex),
       .AN (dig),
-      .LED(leds)
+      .LED(leds),
+
+      .PROG_FINISHED(prog_finished)
   );
 endmodule

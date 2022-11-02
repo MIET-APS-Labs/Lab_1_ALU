@@ -11,11 +11,12 @@ module RISC_V_based_CPU_top #(
     output [15:0] LED,
 
     output [6:0] C,
-    output [7:0] AN
+    output [7:0] AN,
 
+    output logic PROG_FINISHED
 );
   logic rst;
-  assign rst = SW[15];
+  assign rst = ~SW[15];
 
 
   // Main decoder
@@ -137,7 +138,7 @@ module RISC_V_based_CPU_top #(
     instruction[`J_TYPE_IMM_19_12],
     instruction[`J_TYPE_IMM_11],
     instruction[`J_TYPE_IMM_10_1],
-    0
+    1'b0
   };
 
 
@@ -156,7 +157,7 @@ module RISC_V_based_CPU_top #(
     instruction[`B_TYPE_IMM_11],
     instruction[`B_TYPE_IMM_10_5],
     instruction[`B_TYPE_IMM_4_1],
-    0
+    1'b0
   };
 
 
@@ -178,20 +179,13 @@ module RISC_V_based_CPU_top #(
   logic [COUNTER_WIDTH-1:0] PC_increaser;
   logic [`WORD_LEN-1:0] PC_increaser_select_imm;
   assign PC_increaser_select_imm = branch_o ? imm_B : imm_J;
-  //assign PC_increaser = ((branch_o && comp) || jal_o) ? PC_increaser_select_imm : `PC_NEXT_INSTR_INCREASE;
-  assign PC_increaser = ((branch_o && comp) || jal_o) ? PC_increaser_select_imm : 9'd4;
+  assign PC_increaser = ((branch_o && comp) || jal_o) ? PC_increaser_select_imm : `PC_NEXT_INSTR_INCREASE;
   always_ff @(posedge CLK100MHZ) begin
-    if (~rst) begin
-      if (DEBUG) begin
-        $display("\nReseted reg_read_data1 = %b\n", reg_read_data1);
-      end
+    if (rst || illegal_instr_o) begin
+      PROG_FINISHED <= 1;
       PC <= 0;
     end else begin
-      if (DEBUG) begin
-        $display("SW: %b\nReset: %b\nProgram counter: %d\n", SW, rst, PC);
-        $display("PC_increaser_select_imm = %d, PC_increaser = %b", PC_increaser_select_imm,
-                 PC_increaser);
-      end
+      PROG_FINISHED <= 0;
       if (jalr_o) begin
         PC <= reg_read_data1 + imm_I;
       end else begin
@@ -278,5 +272,22 @@ module RISC_V_based_CPU_top #(
       .HEX(C),
       .DIG(AN)
   );
+
+
+  //  Program Counter
+
+  int debug_iter = 0;
+
+  always_ff @(posedge CLK100MHZ) begin
+    if (DEBUG) begin
+      $display(
+          "\n%d) SW = %b\nInstruction = %h\nIllegal instruction = %b\nRD1 = %b\nReset = %b\nProgram counter = %d",
+          debug_iter, SW, instruction, illegal_instr_o, reg_read_data1, rst, PC);
+
+      debug_iter++;
+    end
+  end
+
+
 
 endmodule
