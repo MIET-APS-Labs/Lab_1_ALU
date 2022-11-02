@@ -23,7 +23,7 @@ module decoder_riscv (
 );
 
   always_comb begin
-    if (fetched_instr_i[`INSTR_INSTR_LEN] == `INSTR_LEN) begin
+    if ((fetched_instr_i[`INSTR_INSTR_LEN] == `INSTR_LEN) && (fetched_instr_i != `NOP_INSTR)) begin
 
       ex_op_a_sel_o <= 0;
       ex_op_b_sel_o <= 0;

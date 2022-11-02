@@ -190,6 +190,8 @@
 //////////////////////////////////////////////
 // Main decoder defines
 
+`define NOP_INSTR 8'h13
+
 // opcodes
 
 `define OP_OPCODE 5'b01_100
