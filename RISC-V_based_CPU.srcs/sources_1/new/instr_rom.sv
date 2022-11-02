@@ -33,7 +33,7 @@ module instr_rom #(
   endgenerate
 
   parameter WORD_BYTE_LEN = WORD_LEN / `BYTE_WIDTH;
-  logic [WORD_BYTE_LEN-1:0][`BYTE_WIDTH-1:0] word_o;
+  logic [0:WORD_BYTE_LEN-1][`BYTE_WIDTH-1:0] word_o;
   generate
     genvar iter_w_o;
     for (iter_w_o = 0; iter_w_o < WORD_BYTE_LEN; iter_w_o++) begin
