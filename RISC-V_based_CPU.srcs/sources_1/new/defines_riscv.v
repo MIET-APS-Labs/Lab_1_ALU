@@ -2,7 +2,7 @@
 
 `define RESET_ADDR 32'h00000000
 
-`define PC_NEXT_INSTR_INCREASE 3'd4
+`define PC_NEXT_INSTR_INCREASE 4
 
 //////////////////////////////////////////////
 //  ALU Defines
@@ -158,7 +158,7 @@
 
 // J-type instruction format
 // imm[20|10:1|11|19:12]_[31:12] rd[11:7] opcode[6:0]
-`define J_TYPE_IMM_LEN 20
+`define J_TYPE_IMM_LEN 21
 `define J_TYPE_IMM_20 31
 `define J_TYPE_IMM_10_1 30:21
 `define J_TYPE_IMM_11 20
