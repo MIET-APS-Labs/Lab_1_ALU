@@ -2,9 +2,7 @@
 
 `include "defines_riscv.v"
 
-module RISC_V_based_CPU_top #(
-    parameter DEBUG = 0
-) (
+module RISC_V_based_CPU_top (
     input CLK100MHZ,
     input [15:0] SW,
 
@@ -106,7 +104,6 @@ module RISC_V_based_CPU_top #(
       .size(mem_req_o & mem_size_o),  // Write Enable
 
       .rd(data_read)  // Read Data
-
   );
 
 
@@ -174,9 +171,8 @@ module RISC_V_based_CPU_top #(
 
   //  Program Counter
 
-  parameter COUNTER_WIDTH = $clog2(`INSTR_DEPTH);
-  bit [COUNTER_WIDTH-1:0] PC;
-  logic [COUNTER_WIDTH-1:0] PC_increaser;
+  logic   [`WORD_LEN-1:0] PC;
+  logic [`WORD_LEN-1:0] PC_increaser;
   logic [`WORD_LEN-1:0] PC_increaser_select_imm;
   assign PC_increaser_select_imm = branch_o ? imm_B : imm_J;
   assign PC_increaser = ((branch_o && comp) || jal_o) ? PC_increaser_select_imm : `PC_NEXT_INSTR_INCREASE;
@@ -192,7 +188,6 @@ module RISC_V_based_CPU_top #(
         PC <= PC + PC_increaser;
       end
     end
-
   end
 
 
@@ -272,22 +267,4 @@ module RISC_V_based_CPU_top #(
       .HEX(C),
       .DIG(AN)
   );
-
-
-  //  Program Counter
-
-  int debug_iter = 0;
-
-  always_ff @(posedge CLK100MHZ) begin
-    if (DEBUG) begin
-      $display(
-          "\n%d) SW = %b\nInstruction = %h\nIllegal instruction = %b\nRD1 = %b\nReset = %b\nProgram counter = %d",
-          debug_iter, SW, instruction, illegal_instr_o, reg_read_data1, rst, PC);
-
-      debug_iter++;
-    end
-  end
-
-
-
 endmodule
