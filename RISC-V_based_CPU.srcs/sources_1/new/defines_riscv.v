@@ -61,10 +61,10 @@
 
 
 //////////////////////////////////////////////
-//  Byte addressable Data Memory Defines
+//  Data Memory Defines
 
 `define MEM_TYPE_LOAD_STORE_BIT 3
-`define MEM_DEPTH 1024 // in bytes
+`define MEM_DEPTH 256 // in words
 
 // dmem type load store
 `define LDST_B 3'b000
