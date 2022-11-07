@@ -94,7 +94,7 @@ module RISC_V_based_CPU_top (
 
   logic [`WORD_LEN-1:0] data_read;
 
-  byte_data_mem #(`WORD_LEN, `MEM_TYPE_LOAD_STORE_BIT,
+  data_mem #(`WORD_LEN, `MEM_TYPE_LOAD_STORE_BIT,
   `MEM_DEPTH
   ) my_data_mem (
       .clk(CLK100MHZ),
