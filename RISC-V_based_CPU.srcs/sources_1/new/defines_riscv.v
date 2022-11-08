@@ -108,7 +108,8 @@
 `define INSTR_A3 11:7
 `define INSTR_INSTR_LEN 1:0
 
-`define INSTR_LEN 2'b11
+`define INSTR_LEN_CODE 2'b11
+
 
 // R-type instruction format
 // funct7[31:25] rs2[24:20] rs1[19:15] funct3[14:12] rd[11:7] opcode[6:0]
