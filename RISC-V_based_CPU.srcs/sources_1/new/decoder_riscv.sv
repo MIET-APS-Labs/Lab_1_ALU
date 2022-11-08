@@ -1,6 +1,61 @@
 `timescale 1ns / 1ps
 
-`include "defines_riscv.v"
+// R-type instruction format
+// funct7[31:25] rs2[24:20] rs1[19:15] funct3[14:12] rd[11:7] opcode[6:0]
+typedef struct packed {
+  logic [31:25] funct7;
+  logic [24:20] rs2;
+  logic [19:15] rs1;
+  logic [14:12] funct3;
+  logic [11:7]  rd;
+  logic [6:0]   opcode;
+} R_type_instr_t;
+
+
+// I-type instruction format
+// imm[31:20] rs1[19:15] funct3[14:12] rd[11:7] opcode[6:0]
+// I*-type funct7[31:25] shamt[24:20] rs1[19:15] funct3[14:12] rd[11:7] opcode[6:0]
+typedef struct packed {
+  logic [31:20] imm;
+  logic [19:15] rs1;
+  logic [14:12] funct3;
+  logic [11:7]  rd;
+  logic [6:0]   opcode;
+} I_type_instr_t;
+
+typedef struct packed {
+  logic [31:25] funct7;
+  logic [24:20] shamt;
+  logic [19:15] rs1;
+  logic [14:12] funct3;
+  logic [11:7]  rd;
+  logic [6:0]   opcode;
+} I_type_alt_instr_t;
+
+
+// S-type instruction format
+// imm[11:5]_[31:25] rs2[24:20] rs1[19:15] funct3[14:12] imm[4:0]_[11:7] opcode[6:0]
+typedef struct packed {
+  logic [31:25] imm_11_5;
+  logic [24:20] rs2;
+  logic [19:15] rs1;
+  logic [14:12] funct3;
+  logic [11:7]  imm_4_0;
+  logic [6:0]   opcode;
+} S_type_instr_t;
+
+
+// B-type instruction format
+// imm[12|10:5]_[31:25] rs2[24:20] rs1[19:15] funct3[14:12] imm[4:1|11]_[11:7] opcode[6:0]
+typedef struct packed {
+  logic [31:25] imm_12_10_5;
+  logic [24:20] rs2;
+  logic [19:15] rs1;
+  logic [14:12] funct3;
+  logic [11:7]  imm_4_1_11;
+  logic [6:0]   opcode;
+} B_type_instr_t;
+
 
 module decoder_riscv (
     input [`WORD_LEN-1:0] fetched_instr_i,  // Instruction for decoding, read from instr_rom
@@ -23,7 +78,7 @@ module decoder_riscv (
 );
 
   always_comb begin
-    if ((fetched_instr_i[`INSTR_INSTR_LEN] == `INSTR_LEN) && (fetched_instr_i != `NOP_INSTR)) begin
+    if ((fetched_instr_i[`INSTR_INSTR_LEN] == `INSTR_LEN_CODE) && (fetched_instr_i != `NOP_INSTR)) begin
 
       ex_op_a_sel_o <= 0;
       ex_op_b_sel_o <= 0;
@@ -44,15 +99,17 @@ module decoder_riscv (
       case (fetched_instr_i[`INSTR_OPCODE])
         `OP_OPCODE: begin
           // Write in reg file at rd result of ALU calculation over rs 1 and rs2
+          R_type_instr_t r_fetch_instr;
+          r_fetch_instr = fetched_instr_i;
 
           wb_src_sel_o <= `WB_EX_RESULT;
           ex_op_a_sel_o <= `OP_A_RS1;
           ex_op_b_sel_o <= `OP_B_RS2;
           gpr_we_a_o <= 1;
 
-          case (fetched_instr_i[`R_TYPE_FUNCT_3])
+          case (r_fetch_instr.funct3)
             `OP_FUNCT_3_ADD_SUB: begin
-              case (fetched_instr_i[`R_TYPE_FUNCT_7])
+              case (r_fetch_instr.funct7)
                 `OP_FUNCT_7_ADD: begin
                   alu_op_o <= `ALU_ADD;
                 end
@@ -67,7 +124,7 @@ module decoder_riscv (
             end
 
             `OP_FUNCT_3_XOR: begin
-              if (fetched_instr_i[`R_TYPE_FUNCT_7] === `OP_FUNCT_7_XOR) begin
+              if (r_fetch_instr.funct7 === `OP_FUNCT_7_XOR) begin
                 alu_op_o <= `ALU_XOR;
               end else begin
                 illegal_instr_o <= 1;
@@ -76,7 +133,7 @@ module decoder_riscv (
             end
 
             `OP_FUNCT_3_OR: begin
-              if (fetched_instr_i[`R_TYPE_FUNCT_7] === `OP_FUNCT_7_OR) begin
+              if (r_fetch_instr.funct7 === `OP_FUNCT_7_OR) begin
                 alu_op_o <= `ALU_OR;
               end else begin
                 illegal_instr_o <= 1;
@@ -85,7 +142,7 @@ module decoder_riscv (
             end
 
             `OP_FUNCT_3_AND: begin
-              if (fetched_instr_i[`R_TYPE_FUNCT_7] === `OP_FUNCT_7_AND) begin
+              if (r_fetch_instr.funct7 === `OP_FUNCT_7_AND) begin
                 alu_op_o <= `ALU_AND;
               end else begin
                 illegal_instr_o <= 1;
@@ -94,7 +151,7 @@ module decoder_riscv (
             end
 
             `OP_FUNCT_3_SLL: begin
-              if (fetched_instr_i[`R_TYPE_FUNCT_7] === `OP_FUNCT_7_SLL) begin
+              if (r_fetch_instr.funct7 === `OP_FUNCT_7_SLL) begin
                 alu_op_o <= `ALU_SLL;
               end else begin
                 illegal_instr_o <= 1;
@@ -103,7 +160,7 @@ module decoder_riscv (
             end
 
             `OP_FUNCT_3_SRL_SRA: begin
-              case (fetched_instr_i[`R_TYPE_FUNCT_7])
+              case (r_fetch_instr.funct7)
                 `OP_FUNCT_7_SRL: begin
                   alu_op_o <= `ALU_SRL;
                 end
@@ -118,7 +175,7 @@ module decoder_riscv (
             end
 
             `OP_FUNCT_3_SLT: begin
-              if (fetched_instr_i[`R_TYPE_FUNCT_7] === `OP_FUNCT_7_SLT) begin
+              if (r_fetch_instr.funct7 === `OP_FUNCT_7_SLT) begin
                 alu_op_o <= `ALU_SLT;
               end else begin
                 illegal_instr_o <= 1;
@@ -127,7 +184,7 @@ module decoder_riscv (
             end
 
             `OP_FUNCT_3_SLTU: begin
-              if (fetched_instr_i[`R_TYPE_FUNCT_7] === `OP_FUNCT_7_SLTU) begin
+              if (r_fetch_instr.funct7 === `OP_FUNCT_7_SLTU) begin
                 alu_op_o <= `ALU_SLTU;
               end else begin
                 illegal_instr_o <= 1;
@@ -143,12 +200,15 @@ module decoder_riscv (
         `OP_IMM_OPCODE: begin
           // Write in reg file at rd result of ALU calculation over rs 1 and imm
 
+          I_type_instr_t i_fetch_instr;
+          i_fetch_instr = fetched_instr_i;
+
           wb_src_sel_o <= `WB_EX_RESULT;
           ex_op_a_sel_o <= `OP_A_RS1;
           ex_op_b_sel_o <= `OP_B_IMM_I;
           gpr_we_a_o <= 1;
 
-          case (fetched_instr_i[`I_TYPE_FUNCT_3])
+          case (i_fetch_instr.funct3)
             `OP_IMM_FUNCT_3_ADDI: begin
               alu_op_o <= `ALU_ADD;
             end
@@ -166,7 +226,9 @@ module decoder_riscv (
             end
 
             `OP_IMM_FUNCT_3_SLLI: begin
-              if (fetched_instr_i[`I_TYPE_ALT_FUNCT_7] === `OP_IMM_FUNCT_7_SLLI) begin
+              I_type_alt_instr_t i_alt_fetch_instr;
+              i_alt_fetch_instr = fetched_instr_i;
+              if (i_alt_fetch_instr.funct7 === `OP_IMM_FUNCT_7_SLLI) begin
                 alu_op_o <= `ALU_SLL;
               end else begin
                 illegal_instr_o <= 1;
@@ -174,7 +236,9 @@ module decoder_riscv (
             end
 
             `OP_IMM_FUNCT_3_SRLI: begin
-              if (fetched_instr_i[`I_TYPE_ALT_FUNCT_7] === `OP_IMM_FUNCT_7_SRLI) begin
+              I_type_alt_instr_t i_alt_fetch_instr;
+              i_alt_fetch_instr = fetched_instr_i;
+              if (i_alt_fetch_instr.funct7 === `OP_IMM_FUNCT_7_SRLI) begin
                 alu_op_o <= `ALU_SRL;
               end else begin
                 illegal_instr_o <= 1;
@@ -182,7 +246,9 @@ module decoder_riscv (
             end
 
             `OP_IMM_FUNCT_3_SRAI: begin
-              if (fetched_instr_i[`I_TYPE_ALT_FUNCT_7] === `OP_IMM_FUNCT_7_SRAI) begin
+              I_type_alt_instr_t i_alt_fetch_instr;
+              i_alt_fetch_instr = fetched_instr_i;
+              if (i_alt_fetch_instr.funct7 === `OP_IMM_FUNCT_7_SRAI) begin
                 alu_op_o <= `ALU_SRA;
               end else begin
                 illegal_instr_o <= 1;
@@ -215,6 +281,8 @@ module decoder_riscv (
 
         `LOAD_OPCODE: begin
           // Write in reg file at rd data from data memory at rs1+imm
+          I_type_instr_t i_fetch_instr;
+          i_fetch_instr = fetched_instr_i;
 
           wb_src_sel_o <= `WB_LSU_DATA;
           ex_op_a_sel_o <= `OP_A_RS1;
@@ -223,7 +291,7 @@ module decoder_riscv (
           mem_req_o <= 1;
           mem_we_o <= 0;
 
-          case (fetched_instr_i[`I_TYPE_FUNCT_3])
+          case (i_fetch_instr.funct3)
             `LOAD_FUNCT_3_LB: begin
               mem_size_o <= `LDST_B;
             end
@@ -252,13 +320,15 @@ module decoder_riscv (
 
         `STORE_OPCODE: begin
           // Write in data memory at rs1+imm data from rs2 
+          S_type_instr_t s_fetch_instr;
+          s_fetch_instr = fetched_instr_i;
 
           ex_op_a_sel_o <= `OP_A_RS1;
           ex_op_b_sel_o <= `OP_B_IMM_S;
           mem_req_o <= 1;
           mem_we_o <= 1;
 
-          case (fetched_instr_i[`S_TYPE_FUNCT_3])
+          case (s_fetch_instr.funct3)
             `STORE_FUNCT_3_SB: begin
               mem_size_o <= `LDST_B;
             end
@@ -279,12 +349,14 @@ module decoder_riscv (
 
         `BRANCH_OPCODE: begin
           // If compare result of rs1 and rs2 true, then increase PC by the imm value
+          B_type_instr_t b_fetch_instr;
+          b_fetch_instr = fetched_instr_i;
 
           ex_op_a_sel_o <= `OP_A_RS1;
           ex_op_b_sel_o <= `OP_B_RS2;
           branch_o <= 1;
 
-          case (fetched_instr_i[`B_TYPE_FUNCT_3])
+          case (b_fetch_instr.funct3)
             `BRANCH_FUNCT_3_BEQ: begin
               alu_op_o <= `ALU_BEQ;
             end
@@ -330,8 +402,10 @@ module decoder_riscv (
 
         `JALR_OPCODE: begin
           // Write in reg file at rd next PC adres, increase PC by the imm value
+          I_type_instr_t i_fetch_instr;
+          i_fetch_instr = fetched_instr_i;
 
-          if (fetched_instr_i[`I_TYPE_FUNCT_3] === `JALR_FUNCT_3_SLTU) begin
+          if (i_fetch_instr.funct3 === `JALR_FUNCT_3_SLTU) begin
             wb_src_sel_o <= `WB_EX_RESULT;
             ex_op_a_sel_o <= `OP_A_CURR_PC;
             ex_op_b_sel_o <= `OP_B_INCR;
@@ -371,9 +445,5 @@ module decoder_riscv (
     end else begin
       illegal_instr_o <= 1;
     end
-
-
   end
-
-
 endmodule
