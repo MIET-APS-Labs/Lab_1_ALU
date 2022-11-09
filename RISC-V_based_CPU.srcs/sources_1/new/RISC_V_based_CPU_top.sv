@@ -142,7 +142,7 @@ module RISC_V_based_CPU_top (
   // imm_U sign extender
 
   logic [`WORD_LEN-1:0] imm_U;
-  assign imm_U = {instruction[`U_TYPE_IMM_31_12], {(`WORD_LEN - `U_TYPE_IMM_31_12_LEN) {0}}};
+  assign imm_U = {instruction[`U_TYPE_IMM_31_12], {(`WORD_LEN - `U_TYPE_IMM_31_12_LEN) {1'b0}}};
 
 
   // imm_B sign extender
