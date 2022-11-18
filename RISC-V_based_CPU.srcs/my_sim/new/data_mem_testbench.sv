@@ -13,10 +13,16 @@
 `define LDST_BU 3'b100
 `define LDST_HU 3'b101
 
+// Data mem bounds
+`define DATA_MEM_START 32'h25000000
+`define DATA_MEM_STOP 32'h25000400
+
+`define TEST_BOUNDS_BIAS 32'd8
+
 module data_mem_testbench ();
   logic CLK;
 
-  logic [$clog2(`MEM_DEPTH)-1:0] ADR;
+  logic [`WORD_LEN-1:0] ADR;
   logic [`WORD_LEN-1:0] WD;
   logic WE;
 
@@ -26,7 +32,7 @@ module data_mem_testbench ();
 
   logic [`WORD_LEN-1:0] data_read;
 
-  byte_data_mem #(`WORD_LEN, `MEM_TYPE_LOAD_STORE_BIT_NUM, `MEM_DEPTH) dut (
+  data_mem #(`WORD_LEN, `MEM_TYPE_LOAD_STORE_BIT_NUM, `MEM_DEPTH) dut (
       .clk (CLK),
       .adr (ADR),
       .wd  (WD),
@@ -63,11 +69,15 @@ module data_mem_testbench ();
     passed_num = 0;
     failed_num = 0;
     $display("\nCheck Write/Read Equality, Mem size = %d\n", task_mem_size);
-    for (i = 0; i < `MEM_DEPTH; i += (`WORD_LEN / `BYTE_WIDTH)) begin
+    for (
+        i = (`DATA_MEM_START - `TEST_BOUNDS_BIAS);
+        i <= (`DATA_MEM_STOP + `TEST_BOUNDS_BIAS);
+        i += (`WORD_LEN / `BYTE_WIDTH)
+    ) begin
       ADR = i;
 
       @(posedge CLK);
-      #1;
+      #10;
       data = $urandom();  //returns 32 bit random
 
       case (task_mem_size)
@@ -102,22 +112,36 @@ module data_mem_testbench ();
           data_to_write = `WORD_LEN'b0;
         end
       endcase
-
       WD = data_to_write;
       WE = 1'b1;  // writing data
       @(posedge CLK);
-      #1;
+      #10;
 
       WE = 1'b0;  //reading data
-      if (RD === data_to_write) begin
-        passed_num++;
-        $display("PASSED: Write/Read correct: Addres = %d, Test data = %b, Read data = %b", i,
-                 data_to_write, RD);
+      if ((i >= `DATA_MEM_START) && (i < `DATA_MEM_STOP)) begin
+        if (RD === data_to_write) begin
+          passed_num++;
+          $display("PASSED: Write/Read correct: Addres = %h, Test data = %h, Read data = %h", i,
+                   data_to_write, RD);
+        end else begin
+          failed_num++;
+          $display("FAILED: Write/Read invalid: Addres = %h, Test data = %h, Read data = %h", i,
+                   data_to_write, RD);
+        end
       end else begin
-        failed_num++;
-        $display("FAILED: Write/Read invalid: Addres = %d, Test data = %b, Read data = %b", i,
-                 data_to_write, RD);
+        if (RD === 32'b0) begin
+          passed_num++;
+          $display(
+              "PASSED: Not writed outside Data Mem bounds: Addres = %h, Test data = %h, Read data = %h",
+              i, data_to_write, RD);
+        end else begin
+          failed_num++;
+          $display(
+              "FAILED: Writed outside Data Mem bounds: Addres = %h, Test data = %h, Read data = %h",
+              i, data_to_write, RD);
+        end
       end
+
     end
     $display("\nTotal PASSED num = %d, FAILED num = %d\n", passed_num, failed_num);
   endtask : check_write_read_equal
