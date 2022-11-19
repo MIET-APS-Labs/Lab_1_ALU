@@ -60,6 +60,10 @@ typedef struct packed {
 module decoder_riscv (
     input [`WORD_LEN-1:0] fetched_instr_i,  // Instruction for decoding, read from instr_rom
 
+    input stall,
+
+    output en_pc_n,
+
     output logic [1:0] ex_op_a_sel_o,  // MUX control signal for selecting first operand for ALU
     output logic [2:0] ex_op_b_sel_o,  // MUX control signal for selecting second operand for ALU
     output logic [`ALU_OP_WIDTH-1:0] alu_op_o,  // ALU operation
@@ -76,6 +80,8 @@ module decoder_riscv (
     output logic jal_o,  // Unconditional branch instruction signal jal
     output logic jalr_o  // Unconditional branch instruction signal jalr
 );
+
+  assign en_pc_n = stall;
 
   always_comb begin
     if ((fetched_instr_i[`INSTR_INSTR_LEN] == `INSTR_LEN_CODE) && (fetched_instr_i != `NOP_INSTR)) begin
