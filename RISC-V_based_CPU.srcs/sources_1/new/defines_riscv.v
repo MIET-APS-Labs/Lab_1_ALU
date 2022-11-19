@@ -1,4 +1,5 @@
 `define WORD_LEN 32
+`define BYTE_WIDTH 8
 
 `define RESET_ADDR 32'h00000000
 
@@ -53,20 +54,11 @@
 
 
 //////////////////////////////////////////////
-//  Instruction ROM Defines
+//  Load-Store Unit Defines
 
-`define INSTR_DEPTH 64
-//////////////////////////////////////////////
+`define LDST_SIZE_TYPES_NUM 5
 
-
-
-//////////////////////////////////////////////
-//  Data Memory Defines
-
-`define MEM_TYPE_LOAD_STORE_BIT 3
-`define MEM_DEPTH 256 // in words
-
-// dmem type load store
+// load store size types
 `define LDST_B 3'b000
 `define LDST_H 3'b001
 `define LDST_W 3'b010
