@@ -6,6 +6,8 @@ module miriscv_core (
     input clk_i,
     input arstn_i,
 
+    output prog_finished,
+
     // Instructions ports
     input logic [`WORD_LEN-1:0] instr_rdata_i,
     output [`WORD_LEN-1:0] instr_addr_o,
@@ -19,9 +21,10 @@ module miriscv_core (
     output       [         31:0] data_wdata_o   // data to write
 );
 
+  assign prog_finished = (illegal_instr_o || !arstn_i);
 
   // Main decoder
-
+  logic stall;
   logic [1:0] ex_op_a_sel_o;
   logic [2:0] ex_op_b_sel_o;
   logic [`ALU_OP_WIDTH-1:0] alu_op_o;
@@ -40,6 +43,7 @@ module miriscv_core (
 
   decoder_riscv main_decoder (
       .fetched_instr_i(instr_rdata_i),
+      .stall(stall),
       .en_pc_n(en_pc_n),
       .ex_op_a_sel_o(ex_op_a_sel_o),
       .ex_op_b_sel_o(ex_op_b_sel_o),
@@ -71,13 +75,13 @@ module miriscv_core (
   reg_file #(`WORD_LEN,
   `RF_DEPTH
   ) my_reg_file (
-      .clk (CLK100MHZ),
-      .adr1(instr_rdata_i[`INSTR_RS_1]),
-      .adr2(instr_rdata_i[`INSTR_RS_2]),
-      .adr3(instr_rdata_i[`INSTR_A3]),
-      .wd3 (reg_write_data),
-      .we3 (gpr_we_a_o),
-      .rst (arstn_i),
+      .clk  (clk_i),
+      .adr1 (instr_rdata_i[`INSTR_RS_1]),
+      .adr2 (instr_rdata_i[`INSTR_RS_2]),
+      .adr3 (instr_rdata_i[`INSTR_A3]),
+      .wd3  (reg_write_data),
+      .we3  (gpr_we_a_o),
+      .arst_n(arstn_i),
 
       .rd1(reg_read_data1),
       .rd2(reg_read_data2)
@@ -98,10 +102,11 @@ module miriscv_core (
 
       // core protocol
       .lsu_addr_i(ALU_res),
-      .lsu_we_i  (mem_we_o),
+      .lsu_we_i(mem_we_o),
       .lsu_size_i(mem_size_o),
       .lsu_data_i(reg_read_data2),
-      .lsu_req_i (mem_req_o),
+      .lsu_req_i(mem_req_o),
+      .lsu_stall_req_o(stall),
       .lsu_data_o(data_read),
 
       // memory protocol
@@ -171,12 +176,10 @@ module miriscv_core (
   logic [`WORD_LEN-1:0] PC_increaser_select_imm;
   assign PC_increaser_select_imm = branch_o ? imm_B : imm_J;
   assign PC_increaser = ((branch_o && comp) || jal_o) ? PC_increaser_select_imm : `PC_NEXT_INSTR_INCREASE;
-  always_ff @(posedge CLK100MHZ) begin
-    if (arstn_i || illegal_instr_o) begin
-      //PROG_FINISHED <= 1;
-      PC <= 0;
+  always_ff @(posedge clk_i, negedge arstn_i) begin
+    if (!arstn_i || illegal_instr_o) begin
+      PC <= 1'b0;
     end else if (!en_pc_n) begin
-      //PROG_FINISHED <= 0;
       if (jalr_o) begin
         PC <= reg_read_data1 + imm_I;
       end else begin
@@ -247,19 +250,4 @@ module miriscv_core (
       .Result(ALU_res)
   );
 
-
-
-
-  //assign LED[5:0]  = PC;
-  //assign LED[15:6] = reg_read_data1[9:0];
-
-
-  disp_HEX my_disp_HEX (
-      .CLK(CLK100MHZ),
-      .num(reg_read_data1),
-      .rst(rst),
-
-      .HEX(C),
-      .DIG(AN)
-  );
 endmodule
