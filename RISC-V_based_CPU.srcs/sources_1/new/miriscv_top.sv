@@ -1,10 +1,12 @@
 module miriscv_top #(
-    parameter RAM_SIZE      = 256,        // bytes
+    parameter RAM_SIZE      = 256,  // WORDS
     parameter RAM_INIT_FILE = ""
 ) (
     // clock, reset
     input clk_i,
-    input rst_n_i
+    input rst_n_i,
+
+    output core_prog_finished
 );
 
   logic [31:0] instr_rdata_core;
@@ -35,8 +37,9 @@ module miriscv_top #(
   assign data_wdata_ram  = data_wdata_core;
 
   miriscv_core core (
-      .clk_i  (clk_i),
+      .clk_i(clk_i),
       .arstn_i(rst_n_i),
+      .prog_finished(core_prog_finished),
 
       .instr_rdata_i(instr_rdata_core),
       .instr_addr_o (instr_addr_core),
