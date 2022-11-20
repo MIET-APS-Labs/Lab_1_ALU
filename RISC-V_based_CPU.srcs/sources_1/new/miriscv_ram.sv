@@ -32,7 +32,6 @@ module miriscv_ram #(
         RAM[ram_index] = {32{1'b0}};
       end
     end
-
   end
 
   parameter ADDR_SHIFT_LEN = $clog2(`WORD_LEN / `BYTE_WIDTH);
@@ -40,7 +39,7 @@ module miriscv_ram #(
   //Instruction port
   assign instr_rdata_o = RAM[(instr_addr_i%RAM_SIZE)>>ADDR_SHIFT_LEN];
 
-  logic word_addressable_address;
+  logic [`WORD_LEN-1:0] word_addressable_address;
   assign word_addressable_address = (data_addr_i % RAM_SIZE) >> ADDR_SHIFT_LEN;
 
   always @(posedge clk_i) begin
@@ -49,14 +48,14 @@ module miriscv_ram #(
     end else if (data_req_i) begin
       data_rdata_o <= RAM[word_addressable_address];
 
-      if (data_we_i && data_be_i[0]) RAM[data_addr_i[`WORD_LEN-1:2]][7:0] <= data_wdata_i[7:0];
+      if (data_we_i && data_be_i[0]) RAM[word_addressable_address][7:0] <= data_wdata_i[7:0];
 
-      if (data_we_i && data_be_i[1]) RAM[data_addr_i[`WORD_LEN-1:2]][15:8] <= data_wdata_i[15:8];
+      if (data_we_i && data_be_i[1]) RAM[word_addressable_address][15:8] <= data_wdata_i[15:8];
 
-      if (data_we_i && data_be_i[2]) RAM[data_addr_i[`WORD_LEN-1:2]][23:16] <= data_wdata_i[23:16];
+      if (data_we_i && data_be_i[2]) RAM[word_addressable_address][23:16] <= data_wdata_i[23:16];
 
       if (data_we_i && data_be_i[3])
-        RAM[data_addr_i[`WORD_LEN-1:2]][`WORD_LEN-1:24] <= data_wdata_i[`WORD_LEN-1:24];
+        RAM[word_addressable_address][`WORD_LEN-1:24] <= data_wdata_i[`WORD_LEN-1:24];
 
     end
   end
