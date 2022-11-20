@@ -86,21 +86,21 @@ module decoder_riscv (
   always_comb begin
     if ((fetched_instr_i[`INSTR_INSTR_LEN] == `INSTR_LEN_CODE) && (fetched_instr_i != `NOP_INSTR)) begin
 
-      ex_op_a_sel_o <= 0;
-      ex_op_b_sel_o <= 0;
-      alu_op_o <= 0;
+      ex_op_a_sel_o <= 1'b0;
+      ex_op_b_sel_o <= 1'b0;
+      alu_op_o <= 1'b0;
 
-      mem_req_o <= 0;
-      mem_we_o <= 0;
-      mem_size_o <= 0;
+      mem_req_o <= 1'b0;
+      mem_we_o <= 1'b0;
+      mem_size_o <= 1'b0;
 
-      gpr_we_a_o <= 0;
-      wb_src_sel_o <= 0;
+      gpr_we_a_o <= 1'b0;
+      wb_src_sel_o <= 1'b0;
 
-      illegal_instr_o <= 0;
-      branch_o <= 0;
-      jal_o <= 0;
-      jalr_o <= 0;
+      illegal_instr_o <= 1'b0;
+      branch_o <= 1'b0;
+      jal_o <= 1'b0;
+      jalr_o <= 1'b0;
 
       case (fetched_instr_i[`INSTR_OPCODE])
         `OP_OPCODE: begin
@@ -111,7 +111,7 @@ module decoder_riscv (
           wb_src_sel_o <= `WB_EX_RESULT;
           ex_op_a_sel_o <= `OP_A_RS1;
           ex_op_b_sel_o <= `OP_B_RS2;
-          gpr_we_a_o <= 1;
+          gpr_we_a_o <= 1'b1;
 
           case (r_fetch_instr.funct3)
             `OP_FUNCT_3_ADD_SUB: begin
@@ -123,7 +123,7 @@ module decoder_riscv (
                   alu_op_o <= `ALU_SUB;
                 end
                 default: begin
-                  illegal_instr_o <= 1;
+                  illegal_instr_o <= 1'b1;
                 end
               endcase
 
@@ -133,7 +133,7 @@ module decoder_riscv (
               if (r_fetch_instr.funct7 === `OP_FUNCT_7_XOR) begin
                 alu_op_o <= `ALU_XOR;
               end else begin
-                illegal_instr_o <= 1;
+                illegal_instr_o <= 1'b1;
               end
 
             end
@@ -142,7 +142,7 @@ module decoder_riscv (
               if (r_fetch_instr.funct7 === `OP_FUNCT_7_OR) begin
                 alu_op_o <= `ALU_OR;
               end else begin
-                illegal_instr_o <= 1;
+                illegal_instr_o <= 1'b1;
               end
 
             end
@@ -151,7 +151,7 @@ module decoder_riscv (
               if (r_fetch_instr.funct7 === `OP_FUNCT_7_AND) begin
                 alu_op_o <= `ALU_AND;
               end else begin
-                illegal_instr_o <= 1;
+                illegal_instr_o <= 1'b1;
               end
 
             end
@@ -160,7 +160,7 @@ module decoder_riscv (
               if (r_fetch_instr.funct7 === `OP_FUNCT_7_SLL) begin
                 alu_op_o <= `ALU_SLL;
               end else begin
-                illegal_instr_o <= 1;
+                illegal_instr_o <= 1'b1;
               end
 
             end
@@ -174,7 +174,7 @@ module decoder_riscv (
                   alu_op_o <= `ALU_SRA;
                 end
                 default: begin
-                  illegal_instr_o <= 1;
+                  illegal_instr_o <= 1'b1;
                 end
               endcase
 
@@ -184,7 +184,7 @@ module decoder_riscv (
               if (r_fetch_instr.funct7 === `OP_FUNCT_7_SLT) begin
                 alu_op_o <= `ALU_SLT;
               end else begin
-                illegal_instr_o <= 1;
+                illegal_instr_o <= 1'b1;
               end
 
             end
@@ -193,12 +193,12 @@ module decoder_riscv (
               if (r_fetch_instr.funct7 === `OP_FUNCT_7_SLTU) begin
                 alu_op_o <= `ALU_SLTU;
               end else begin
-                illegal_instr_o <= 1;
+                illegal_instr_o <= 1'b1;
               end
 
             end
             default: begin
-              illegal_instr_o <= 1;
+              illegal_instr_o <= 1'b1;
             end
           endcase
 
@@ -212,7 +212,7 @@ module decoder_riscv (
           wb_src_sel_o <= `WB_EX_RESULT;
           ex_op_a_sel_o <= `OP_A_RS1;
           ex_op_b_sel_o <= `OP_B_IMM_I;
-          gpr_we_a_o <= 1;
+          gpr_we_a_o <= 1'b1;
 
           case (i_fetch_instr.funct3)
             `OP_IMM_FUNCT_3_ADDI: begin
@@ -237,7 +237,7 @@ module decoder_riscv (
               if (i_alt_fetch_instr.funct7 === `OP_IMM_FUNCT_7_SLLI) begin
                 alu_op_o <= `ALU_SLL;
               end else begin
-                illegal_instr_o <= 1;
+                illegal_instr_o <= 1'b1;
               end
             end
 
@@ -247,7 +247,7 @@ module decoder_riscv (
               if (i_alt_fetch_instr.funct7 === `OP_IMM_FUNCT_7_SRLI) begin
                 alu_op_o <= `ALU_SRL;
               end else begin
-                illegal_instr_o <= 1;
+                illegal_instr_o <= 1'b1;
               end
             end
 
@@ -257,7 +257,7 @@ module decoder_riscv (
               if (i_alt_fetch_instr.funct7 === `OP_IMM_FUNCT_7_SRAI) begin
                 alu_op_o <= `ALU_SRA;
               end else begin
-                illegal_instr_o <= 1;
+                illegal_instr_o <= 1'b1;
               end
             end
 
@@ -270,7 +270,7 @@ module decoder_riscv (
             end
 
             default: begin
-              illegal_instr_o <= 1;
+              illegal_instr_o <= 1'b1;
             end
           endcase
         end
@@ -281,7 +281,7 @@ module decoder_riscv (
           wb_src_sel_o <= `WB_EX_RESULT;
           ex_op_a_sel_o <= `OP_A_ZERO;
           ex_op_b_sel_o <= `OP_B_IMM_U;
-          gpr_we_a_o <= 1;
+          gpr_we_a_o <= 1'b1;
           alu_op_o <= `ALU_ADD;
         end
 
@@ -293,9 +293,9 @@ module decoder_riscv (
           wb_src_sel_o <= `WB_LSU_DATA;
           ex_op_a_sel_o <= `OP_A_RS1;
           ex_op_b_sel_o <= `OP_B_IMM_I;
-          gpr_we_a_o <= 1;
-          mem_req_o <= 1;
-          mem_we_o <= 0;
+          gpr_we_a_o <= 1'b1;
+          mem_req_o <= 1'b1;
+          mem_we_o <= 1'b0;
 
           case (i_fetch_instr.funct3)
             `LOAD_FUNCT_3_LB: begin
@@ -319,7 +319,7 @@ module decoder_riscv (
             end
 
             default: begin
-              illegal_instr_o <= 1;
+              illegal_instr_o <= 1'b1;
             end
           endcase
         end
@@ -331,8 +331,8 @@ module decoder_riscv (
 
           ex_op_a_sel_o <= `OP_A_RS1;
           ex_op_b_sel_o <= `OP_B_IMM_S;
-          mem_req_o <= 1;
-          mem_we_o <= 1;
+          mem_req_o <= 1'b1;
+          mem_we_o <= 1'b1;
 
           case (s_fetch_instr.funct3)
             `STORE_FUNCT_3_SB: begin
@@ -348,7 +348,7 @@ module decoder_riscv (
             end
 
             default: begin
-              illegal_instr_o <= 1;
+              illegal_instr_o <= 1'b1;
             end
           endcase
         end
@@ -360,7 +360,7 @@ module decoder_riscv (
 
           ex_op_a_sel_o <= `OP_A_RS1;
           ex_op_b_sel_o <= `OP_B_RS2;
-          branch_o <= 1;
+          branch_o <= 1'b1;
 
           case (b_fetch_instr.funct3)
             `BRANCH_FUNCT_3_BEQ: begin
@@ -388,7 +388,7 @@ module decoder_riscv (
             end
 
             default: begin
-              illegal_instr_o <= 1;
+              illegal_instr_o <= 1'b1;
             end
           endcase
         end
@@ -399,11 +399,11 @@ module decoder_riscv (
           wb_src_sel_o <= `WB_EX_RESULT;
           ex_op_a_sel_o <= `OP_A_CURR_PC;
           ex_op_b_sel_o <= `OP_B_INCR;
-          gpr_we_a_o <= 1;
+          gpr_we_a_o <= 1'b1;
 
           alu_op_o <= `ALU_ADD;
 
-          jal_o <= 1;
+          jal_o <= 1'b1;
         end
 
         `JALR_OPCODE: begin
@@ -415,13 +415,13 @@ module decoder_riscv (
             wb_src_sel_o <= `WB_EX_RESULT;
             ex_op_a_sel_o <= `OP_A_CURR_PC;
             ex_op_b_sel_o <= `OP_B_INCR;
-            gpr_we_a_o <= 1;
+            gpr_we_a_o <= 1'b1;
 
             alu_op_o <= `ALU_ADD;
 
-            jalr_o <= 1;
+            jalr_o <= 1'b1;
           end else begin
-            illegal_instr_o <= 1;
+            illegal_instr_o <= 1'b1;
           end
         end
 
@@ -431,25 +431,25 @@ module decoder_riscv (
           wb_src_sel_o <= `WB_EX_RESULT;
           ex_op_a_sel_o <= `OP_A_CURR_PC;
           ex_op_b_sel_o <= `OP_B_IMM_U;
-          gpr_we_a_o <= 1;
+          gpr_we_a_o <= 1'b1;
 
           alu_op_o <= `ALU_ADD;
         end
 
         `MISC_MEM_OPCODE: begin
-          illegal_instr_o <= 0;
+          illegal_instr_o <= 1'b0;
         end
 
         `SYSTEM_OPCODE: begin
-          illegal_instr_o <= 0;
+          illegal_instr_o <= 1'b0;
         end
         default: begin
-          illegal_instr_o <= 1;
+          illegal_instr_o <= 1'b1;
         end
       endcase
 
     end else begin
-      illegal_instr_o <= 1;
+      illegal_instr_o <= 1'b1;
     end
   end
 endmodule
