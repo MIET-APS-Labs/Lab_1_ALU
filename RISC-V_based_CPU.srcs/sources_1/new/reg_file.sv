@@ -10,7 +10,7 @@ module reg_file #(
     input [$clog2(DEPTH)-1:0] adr3,  // write address
     input [WORD_LEN-1:0] wd3,  // Write Data
     input we3,  // Write Enable
-    input rst,
+    input arst_n,
 
     output [WORD_LEN-1:0] rd1,  // Read Data
     output [WORD_LEN-1:0] rd2   // Read Data
@@ -20,8 +20,8 @@ module reg_file #(
   assign rd1 = (adr1 == 0) ? 0 : RAM[adr1];
   assign rd2 = (adr2 == 0) ? 0 : RAM[adr2];
 
-  always_ff @(posedge clk) begin
-    if (rst) begin
+  always_ff @(posedge clk, negedge arst_n) begin
+    if (!arst_n) begin
       int ram_index;
       for (ram_index = 0; ram_index < DEPTH; ram_index = ram_index + 1) begin
         RAM[ram_index] = {WORD_LEN{1'b0}};
