@@ -25,24 +25,49 @@ module miriscv_lsu (
 
   parameter ADDR_SHIFT_LEN = $clog2(`WORD_LEN / `BYTE_WIDTH);
   logic [ADDR_SHIFT_LEN-1:0] byte_offset;
-  assign byte_offset = (lsu_addr_i % ADDR_SHIFT_LEN);
+  assign byte_offset = lsu_addr_i[0+:ADDR_SHIFT_LEN];
+
+  logic illegal_offset_size;
 
   always_comb begin
+    illegal_offset_size <= 1'b0;
     case (byte_offset)
-      2'd0: begin
-        data_be_o <= 4'd1;
+      2'b00: begin
+        if ((lsu_size_i == `LDST_B) || (lsu_size_i == `LDST_BU)) begin
+          data_be_o <= 4'b1;
+        end else if ((lsu_size_i == `LDST_H) || (lsu_size_i == `LDST_HU)) begin
+          data_be_o <= 4'b11;
+        end else if (lsu_size_i == `LDST_W) begin
+          data_be_o <= 4'b1111;
+        end
       end
-      2'd1: begin
-        data_be_o <= 4'd2;
+      2'b01: begin
+        if ((lsu_size_i == `LDST_B) || (lsu_size_i == `LDST_BU)) begin
+          data_be_o <= 4'b10;
+        end else if ((lsu_size_i == `LDST_H) || (lsu_size_i == `LDST_HU)) begin
+          data_be_o <= 4'b110;
+        end else if (lsu_size_i == `LDST_W) begin
+          illegal_offset_size <= 1'b1;
+        end
       end
-      2'd2: begin
-        data_be_o <= 4'd4;
+      2'b10: begin
+        if ((lsu_size_i == `LDST_B) || (lsu_size_i == `LDST_BU)) begin
+          data_be_o <= 4'b100;
+        end else if ((lsu_size_i == `LDST_H) || (lsu_size_i == `LDST_HU)) begin
+          data_be_o <= 4'b1100;
+        end else if (lsu_size_i == `LDST_W) begin
+          illegal_offset_size <= 1'b1;
+        end
       end
-      2'd3: begin
-        data_be_o <= 4'd8;
+      2'b11: begin
+        if ((lsu_size_i == `LDST_B) || (lsu_size_i == `LDST_BU)) begin
+          data_be_o <= 4'b1000;
+        end else begin
+          illegal_offset_size <= 1'b1;
+        end
       end
       default: begin
-        data_be_o <= 4'd1;
+        illegal_offset_size <= 1'b1;
       end
     endcase
   end
@@ -62,7 +87,7 @@ module miriscv_lsu (
 
       if (lsu_we_i) begin  // STORE
         if (lsu_stall_req_o) begin
-          data_wdata_o <= lsu_data_i;
+          data_wdata_o <= (lsu_data_i << (byte_offset * `BYTE_WIDTH));
         end else begin
           data_wdata_o <= {`WORD_LEN{1'b0}};
         end
