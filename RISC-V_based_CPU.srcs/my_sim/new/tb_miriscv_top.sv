@@ -11,29 +11,7 @@ module tb_miriscv_top ();
   // clock, reset
   logic clk;
   logic rst_n;
-
-  logic [`WORD_LEN-1:0] instruction;
-  assign instruction = dut.core.instr_rdata_i;
-
-  logic [`WORD_LEN-1:0] PC;
-  assign PC = dut.core.PC;
-
-  logic lsu_req_i, lsu_we_i, lsu_stall_req_o, data_req_o, data_we_o;
-  assign lsu_req_i = dut.core.load_store_unit.lsu_req_i;
-  assign lsu_we_i = dut.core.load_store_unit.lsu_we_i;
-  assign lsu_stall_req_o = dut.core.load_store_unit.lsu_stall_req_o;
-  assign data_req_o = dut.core.load_store_unit.data_req_o;
-  assign data_we_o = dut.core.load_store_unit.data_we_o;
-
-  logic [`WORD_LEN-1:0] lsu_data_o, lsu_data_i, data_addr_o;
-  assign lsu_data_o  = dut.core.load_store_unit.lsu_data_o;
-  assign lsu_data_i  = dut.core.load_store_unit.lsu_data_i;
-  assign data_addr_o = dut.core.load_store_unit.data_addr_o;
-
-  logic [`WORD_LEN -1:0] ALU_A_operand, ALU_B_operand;
-  assign ALU_A_operand = dut.core.ALU_A_operand;
-  assign ALU_B_operand = dut.core.ALU_B_operand;
-
+  
   logic prog_finished;
 
   miriscv_top #(
