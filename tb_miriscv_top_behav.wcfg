@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_miriscv_top_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="\$unit_defines_riscv_v " />
+            <top_module name="glbl" />
+            <top_module name="tb_miriscv_top" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="38706750fs"></ZoomStartTime>
+      <ZoomEndTime time="73306751fs"></ZoomEndTime>
+      <Cursor1Time time="65000000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="198"></NameColumnWidth>
+      <ValueColumnWidth column_width="226"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="20" />
+   <wvobject fp_name="/tb_miriscv_top/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top/rst_n" type="logic">
+      <obj_property name="ElementShortName">rst_n</obj_property>
+      <obj_property name="ObjectShortName">rst_n</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top/dut/core/PC" type="array">
+      <obj_property name="ElementShortName">PC[31:0]</obj_property>
+      <obj_property name="ObjectShortName">PC[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top/prog_finished" type="logic">
+      <obj_property name="ElementShortName">prog_finished</obj_property>
+      <obj_property name="ObjectShortName">prog_finished</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top/program_started" type="logic">
+      <obj_property name="ElementShortName">program_started</obj_property>
+      <obj_property name="ObjectShortName">program_started</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top/dut/core/main_decoder/fetched_instr_i" type="array">
+      <obj_property name="ElementShortName">fetched_instr_i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">fetched_instr_i[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top/dut/core/main_decoder/stall" type="logic">
+      <obj_property name="ElementShortName">stall</obj_property>
+      <obj_property name="ObjectShortName">stall</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top/dut/core/main_decoder/en_pc_n" type="logic">
+      <obj_property name="ElementShortName">en_pc_n</obj_property>
+      <obj_property name="ObjectShortName">en_pc_n</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top/dut/core/main_decoder/illegal_instr_o" type="logic">
+      <obj_property name="ElementShortName">illegal_instr_o</obj_property>
+      <obj_property name="ObjectShortName">illegal_instr_o</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top/dut/core/load_store_unit/lsu_size_i" type="array">
+      <obj_property name="ElementShortName">lsu_size_i[2:0]</obj_property>
+      <obj_property name="ObjectShortName">lsu_size_i[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top/dut/core/load_store_unit/data_rdata_i" type="array">
+      <obj_property name="ElementShortName">data_rdata_i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_rdata_i[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top/dut/core/load_store_unit/data_req_o" type="logic">
+      <obj_property name="ElementShortName">data_req_o</obj_property>
+      <obj_property name="ObjectShortName">data_req_o</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top/dut/core/load_store_unit/data_we_o" type="logic">
+      <obj_property name="ElementShortName">data_we_o</obj_property>
+      <obj_property name="ObjectShortName">data_we_o</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top/dut/core/load_store_unit/ADDR_SHIFT_LEN" type="array">
+      <obj_property name="ElementShortName">ADDR_SHIFT_LEN[31:0]</obj_property>
+      <obj_property name="ObjectShortName">ADDR_SHIFT_LEN[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top/dut/core/load_store_unit/byte_offset" type="array">
+      <obj_property name="ElementShortName">byte_offset[1:0]</obj_property>
+      <obj_property name="ObjectShortName">byte_offset[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top/dut/core/load_store_unit/data_be_o" type="array">
+      <obj_property name="ElementShortName">data_be_o[3:0]</obj_property>
+      <obj_property name="ObjectShortName">data_be_o[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top/dut/core/load_store_unit/data_addr_o" type="array">
+      <obj_property name="ElementShortName">data_addr_o[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_addr_o[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top/dut/core/load_store_unit/data_wdata_o" type="array">
+      <obj_property name="ElementShortName">data_wdata_o[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_wdata_o[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top/dut/core/load_store_unit/lsu_data_o" type="array">
+      <obj_property name="ElementShortName">lsu_data_o[31:0]</obj_property>
+      <obj_property name="ObjectShortName">lsu_data_o[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top/dut/ram/RAM" type="array">
+      <obj_property name="ElementShortName">RAM[0:255][31:0]</obj_property>
+      <obj_property name="ObjectShortName">RAM[0:255][31:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+</wave_config>
