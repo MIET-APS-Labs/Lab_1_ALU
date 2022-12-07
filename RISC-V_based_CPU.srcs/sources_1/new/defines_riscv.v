@@ -5,6 +5,8 @@
 
 `define PC_NEXT_INSTR_INCREASE 4
 
+`define CSR_OP_LEN 3
+
 //////////////////////////////////////////////
 //  ALU Defines
 
@@ -65,6 +67,34 @@
 `define LDST_BU 3'b100
 `define LDST_HU 3'b101
 //////////////////////////////////////////////
+
+
+//////////////////////////////////////////////
+// MUX Cases
+// operand a selection
+`define OP_A_RS1 2'b00
+`define OP_A_CURR_PC 2'b01
+`define OP_A_ZERO 2'b10
+
+// operand b selection
+`define OP_B_RS2 3'b000
+`define OP_B_IMM_I 3'b001
+`define OP_B_IMM_U 3'b010
+`define OP_B_IMM_S 3'b011
+`define OP_B_INCR 3'b100
+
+// writeback source selection
+`define WB_EX_RESULT 1'b0
+`define WB_LSU_DATA 1'b1
+
+//////////////////////////////////////////////
+// CSR Write options
+`define CSR_OP_WRITE_REG_ZERO 2'd0
+`define CSR_OP_WRITE_REG_WD 2'd1
+`define CSR_OP_WRITE_REG_NOT_WD_AND_RD 2'd2
+`define CSR_OP_WRITE_REG_WD_OR_RD 2'd3
+//////////////////////////////////////////////
+
 
 //////////////////////////////////////////////
 //  CYBERcobra 3000 Pro 2.0 Instuction format
@@ -158,29 +188,14 @@
 `define J_TYPE_RD 11:7
 
 
-
-//////////////////////////////////////////////
-// MUX Cases
-// operand a selection
-`define OP_A_RS1 2'b00
-`define OP_A_CURR_PC 2'b01
-`define OP_A_ZERO 2'b10
-
-// operand b selection
-`define OP_B_RS2 3'b000
-`define OP_B_IMM_I 3'b001
-`define OP_B_IMM_U 3'b010
-`define OP_B_IMM_S 3'b011
-`define OP_B_INCR 3'b100
-
-// writeback source selection
-`define WB_EX_RESULT 1'b0
-`define WB_LSU_DATA 1'b1
-
-
-
 //////////////////////////////////////////////
 // Main decoder defines
+
+`define JALR_LEN 2
+`define JALR_MUX_PC_INC 2'b0
+`define JALR_MUX_PC_RD1_IMM 2'b1
+`define JALR_MUX_PC_MEPC 2'b10
+`define JALR_MUX_PC_MTVEC 2'b11
 
 `define NOP_INSTR 8'h13
 
@@ -269,4 +284,8 @@
 
 
 `define SYSTEM_OPCODE 5'b11_100
+`define SYSTEM_FUNCT_3_MRET 3'h0
+`define SYSTEM_FUNCT_3_CSR_RW 3'h1
+`define SYSTEM_FUNCT_3_CSR_RS 3'h2
+`define SYSTEM_FUNCT_3_CSR_RC 3'h3
 

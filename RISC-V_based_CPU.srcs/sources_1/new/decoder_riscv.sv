@@ -1,5 +1,7 @@
 `timescale 1ns / 1ps
 
+`include "defines_riscv.v"
+
 // R-type instruction format
 // funct7[31:25] rs2[24:20] rs1[19:15] funct3[14:12] rd[11:7] opcode[6:0]
 typedef struct packed {
@@ -78,7 +80,13 @@ module decoder_riscv (
     output logic illegal_instr_o,  // Illegal instruction signal
     output logic branch_o,  // Conditional branch instruction signal
     output logic jal_o,  // Unconditional branch instruction signal jal
-    output logic jalr_o  // Unconditional branch instruction signal jalr
+    output logic [`JALR_LEN-1:0] jalr_o,  // Unconditional branch instruction signal jalr
+
+    input int_i,  // from Interrupt controller - reports about Interrupt occurs and must be handled
+    output logic int_rst_o,  // to Interrupt controller -  reports that Interrupt handled
+
+    output logic csr_o,
+    output logic [`CSR_OP_LEN-1:0] CSRop_o
 );
 
   assign en_pc_n = stall;
@@ -100,7 +108,11 @@ module decoder_riscv (
       illegal_instr_o <= 1'b0;
       branch_o <= 1'b0;
       jal_o <= 1'b0;
-      jalr_o <= 1'b0;
+      jalr_o <= `JALR_LEN'b0;
+
+      int_rst_o <= 1'b0;
+      csr_o <= 1'b0;
+      CSRop_o <= 1'b0;
 
       case (fetched_instr_i[`INSTR_OPCODE])
         `OP_OPCODE: begin
@@ -419,7 +431,7 @@ module decoder_riscv (
 
             alu_op_o <= `ALU_ADD;
 
-            jalr_o <= 1'b1;
+            jalr_o <= `JALR_MUX_PC_RD1_IMM;
           end else begin
             illegal_instr_o <= 1'b1;
           end
@@ -441,7 +453,38 @@ module decoder_riscv (
         end
 
         `SYSTEM_OPCODE: begin
-          illegal_instr_o <= 1'b0;
+          // Handling CSR and return from interrupt
+          I_type_instr_t i_fetch_instr;
+          i_fetch_instr = fetched_instr_i;
+
+          case (i_fetch_instr.funct3)
+            `SYSTEM_FUNCT_3_MRET: begin
+              int_rst_o <= 1'b1;
+              jalr_o <= `JALR_MUX_PC_MEPC;
+            end
+
+            `SYSTEM_FUNCT_3_CSR_RW: begin
+              csr_o <= 1'b1;
+              gpr_we_a_o <= 1'b1;
+              CSRop_o <= `CSR_OP_WRITE_REG_WD;
+            end
+
+            `SYSTEM_FUNCT_3_CSR_RS: begin
+              csr_o <= 1'b1;
+              gpr_we_a_o <= 1'b1;
+              CSRop_o <= `CSR_OP_WRITE_REG_WD_OR_RD;
+            end
+
+            `SYSTEM_FUNCT_3_CSR_RC: begin
+              csr_o <= 1'b1;
+              gpr_we_a_o <= 1'b1;
+              CSRop_o <= `CSR_OP_WRITE_REG_NOT_WD_AND_RD;
+            end
+
+            default: begin
+              illegal_instr_o <= 1'b1;
+            end
+          endcase
         end
         default: begin
           illegal_instr_o <= 1'b1;
@@ -451,5 +494,11 @@ module decoder_riscv (
     end else begin
       illegal_instr_o <= 1'b1;
     end
+
+    if (int_i) begin
+      jalr_o <= `JALR_MUX_PC_MTVEC;
+      CSRop_o[`CSR_OP_LEN-1] <= 1'b1;
+    end
+
   end
 endmodule

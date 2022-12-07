@@ -6,6 +6,9 @@ module miriscv_top #(
     input clk_i,
     input rst_n_i,
 
+    input  [`WORD_LEN-1:0] int_req_i,
+    output [`WORD_LEN-1:0] int_fin_o,
+
     output core_prog_finished
 );
 
@@ -41,15 +44,20 @@ module miriscv_top #(
       .arstn_i(rst_n_i),
       .prog_finished(core_prog_finished),
 
-      .instr_rdata_i(instr_rdata_core),
-      .instr_addr_o (instr_addr_core),
+      .instr_rdata (instr_rdata_core),
+      .instr_addr_o(instr_addr_core),
 
       .data_rdata_i(data_rdata_core),
       .data_req_o  (data_req_core),
       .data_we_o   (data_we_core),
       .data_be_o   (data_be_core),
       .data_addr_o (data_addr_core),
-      .data_wdata_o(data_wdata_core)
+      .data_wdata_o(data_wdata_core),
+
+      .mcause_i(mcause),
+      .INT(INT),
+      .mie_o(mie),
+      .INT_RST(INT_RST)
   );
 
   miriscv_ram #(
@@ -69,6 +77,26 @@ module miriscv_top #(
       .data_addr_i (data_addr_ram),
       .data_wdata_i(data_wdata_ram)
   );
+
+  logic INT_RST;
+  logic [`WORD_LEN-1:0] mie;
+  logic [`WORD_LEN-1:0] mcause;
+  logic INT;
+
+  int_ctrl my_interrupt (
+      .clk_i  (clk_i),
+      .arstn_i(rst_n_i),
+
+      .INT_RST(INT_RST),  // reports that Interrupt handled
+
+      .mie_i(mie),  // Machine interrup-enable register
+      .int_req(int_req_i),  // Machine interrup-enable register
+
+      .mcause_o(mcause),  // Machine trap cause
+      .INT(INT),  // reports about Interrupt occurs and must be handled
+      .int_fin(int_fin_o)
+  );
+
 
 
 endmodule
