@@ -30,17 +30,16 @@ module cpu_top_testbench ();
     sw = `SWITCHES_NON_RST;
     @(negedge CLK);
 
-    for (int i = 0; i < `INSTR_DEPTH; i++) begin
-      if (prog_finished) begin
-        $finish;
-      end
+
+    while (!prog_finished) begin
       @(posedge CLK);
     end
+
     $finish;
   end
 
 
-  RISC_V_based_CPU_top dut (
+  miriscv_core dut (
       .CLK100MHZ(CLK),
       .SW(sw),
 
@@ -57,9 +56,9 @@ module cpu_top_testbench ();
   always_ff @(posedge CLK) begin
     if (`DEBUG_ON) begin
       $display(
-          "\n%d) SW = %b\nInstruction = %h\nIllegal instruction = %b\nRD1 = %b\nReset = %b\nProgram counter = %d",
-          debug_iter, sw, dut.instruction, dut.illegal_instr_o, dut.reg_read_data1, dut.rst,
-          dut.PC);
+          "\n%d) SW = %b\nInstruction = %h\nIllegal instruction = %b\nWD3 = %h\nRD1 = %h\nRD2 = %h\nReset = %b\nProgram counter = %h",
+          debug_iter, sw, dut.instruction, dut.illegal_instr_o, dut.reg_write_data,
+          dut.reg_read_data1, dut.reg_read_data2, dut.rst, dut.PC);
 
       debug_iter++;
     end
