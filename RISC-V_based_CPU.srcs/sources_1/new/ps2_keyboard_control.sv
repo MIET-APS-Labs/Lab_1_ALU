@@ -26,10 +26,14 @@ module ps2_keyboard_control (
 
     input ps2_clk_i,
     input ps2_data_i,
-    output logic [`WORD_LEN-1:0] data_o
+
+    input valid_data_rst_i,
+
+    output logic [`WORD_LEN-1:0] data_o,
+
+    output logic valid_data_int_o
 );
 
-  logic valid_data;
   logic [7:0] keyboard_data;
 
   ps2_keyboard my_keyboard (
@@ -37,7 +41,9 @@ module ps2_keyboard_control (
       .clk_50_i(clk_50),
       .ps2_clk_i(ps2_clk_i),
       .ps2_data_i(ps2_data_i),
-      .valid_data_o(valid_data),
+      .valid_data_rst_i(valid_data_rst_i),
+
+      .valid_data_o(valid_data_int_o),
       .data_o(keyboard_data)
   );
 
@@ -79,16 +85,9 @@ module ps2_keyboard_control (
 
   always_comb begin
     if (!rst_reg[0]) begin
-      case (addr_i)
-        `C_KEY_CODE_REG: begin
-          data_o <= {{(`WORD_LEN - `BYTE_WIDTH) {1'b0}}, keyboard_data};
-        end
-        `C_VALID_REG: begin
-          data_o <= {{(`WORD_LEN - `BYTE_WIDTH) {1'b0}}, {`BYTE_WIDTH{valid_data}}};
-        end
-        default: begin
-        end
-      endcase
+      if (addr_i == `C_KEY_CODE_REG) begin
+        data_o <= {{(`WORD_LEN - `BYTE_WIDTH) {1'b0}}, keyboard_data};
+      end
     end
   end
 

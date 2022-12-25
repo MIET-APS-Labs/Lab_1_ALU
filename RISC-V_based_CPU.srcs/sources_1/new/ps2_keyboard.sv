@@ -6,6 +6,8 @@ module ps2_keyboard (
     input clk_50_i,
     input ps2_clk_i,
     input ps2_data_i,
+    input valid_data_rst_i,
+
     output logic valid_data_o,
     output [7:0] data_o
 );
@@ -87,7 +89,7 @@ module ps2_keyboard (
     parity_calc = ~(a[0] ^ a[1] ^ a[2] ^ a[3] ^ a[4] ^ a[5] ^ a[6] ^ a[7]);
   endfunction
   always @(posedge clk_50_i, posedge a_rst_i) begin
-    if (a_rst_i) begin
+    if (a_rst_i || valid_data_rst_i) begin
       valid_data_o <= 1'b0;
     end else if (ps2_clk_negedge) begin
       if (ps2_data_i && parity_calc(
