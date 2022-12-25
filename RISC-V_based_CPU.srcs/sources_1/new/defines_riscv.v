@@ -97,6 +97,14 @@
 
 
 //////////////////////////////////////////////
+`define RD_SEL_LEN 1    // log2(2)
+// Address decoder read source
+`define RDATA_MEM 1'd0
+`define RDATA_KEYBOARD 1'd1
+//////////////////////////////////////////////
+
+
+//////////////////////////////////////////////
 //  CYBERcobra 3000 Pro 2.0 Instuction format
 // B[31] C[30] WS[29:28] ALUop[27:23] RA1[22:18] RA2[17:13] CONST[12:5] WA[4:0]
 
