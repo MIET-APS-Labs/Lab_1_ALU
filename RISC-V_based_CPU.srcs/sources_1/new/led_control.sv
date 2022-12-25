@@ -2,7 +2,7 @@
 
 //***********************************
 // Address space
-//  Using 4 WORDS
+//  Using 5 WORDS
 //  0x80001000 – 0x80001007 - nums to disp on LEDs
 //  0x80001008 - on/off of individual seven-segment displays (eg. 0xFF - all displays turns on, 0x00 - all turns off)
 //  0x8000100C - mode of choosing displays, 0xFF - mode isn't used, 0x00 - 0x07 - choosed display, that starts blinking
@@ -28,6 +28,12 @@
 `define ADDR_LEN 5 // $clog2(`14) + 1
 `define BE_LEN 4 // `WORD_LEN / `BYTE_WIDTH
 
+`define C_NUM_1_REG `ADDR_LEN'h0
+`define C_NUM_2_REG `ADDR_LEN'h04
+`define C_DISP_REG `ADDR_LEN'h08
+`define C_MODE_REG `ADDR_LEN'h0C
+`define C_RST_REG `ADDR_LEN'h10
+
 //`define CLK_DIV 100000000
 `define CLK_DIV 10
 
@@ -47,14 +53,6 @@ module led_control (
   logic [`WORD_LEN-1:0] mode_reg;
   logic [`WORD_LEN-1:0] rst_reg;
 
-  enum {
-    C_NUM_1_REG = `ADDR_LEN'h0,
-    C_NUM_2_REG = `ADDR_LEN'h04,
-    C_DISP_REG  = `ADDR_LEN'h08,
-    C_MODE_REG  = `ADDR_LEN'h0C,
-    C_RST_REG   = `ADDR_LEN'h10
-  } C_ADDR;
-
   always_ff @(posedge clk_200_i) begin
     if (rst_reg[0]) begin
       num_reg_1 <= `WORD_LEN'b0;
@@ -63,15 +61,15 @@ module led_control (
       mode_reg <= {`WORD_LEN{1'b1}};
     end
     if (we_i) begin
-      if (addr_i == C_NUM_1_REG) begin
+      if (addr_i == `C_NUM_1_REG) begin
         num_reg_1 <= wdata_i;
-      end else if (addr_i == C_NUM_2_REG) begin
+      end else if (addr_i == `C_NUM_2_REG) begin
         num_reg_2 <= wdata_i;
-      end else if (addr_i == C_DISP_REG) begin
+      end else if (addr_i == `C_DISP_REG) begin
         disp_on_off_reg <= wdata_i;
-      end else if (addr_i == C_MODE_REG) begin
+      end else if (addr_i == `C_MODE_REG) begin
         mode_reg <= wdata_i;
-      end else if (addr_i == C_RST_REG) begin
+      end else if (addr_i == `C_RST_REG) begin
         rst_reg <= wdata_i;
       end
     end
