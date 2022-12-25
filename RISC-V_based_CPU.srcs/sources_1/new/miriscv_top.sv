@@ -1,3 +1,6 @@
+`define SEGMENTS_NUM 7
+`define DIGITS_NUM 8
+
 module miriscv_top #(
     parameter RAM_SIZE      = 256,  // WORDS
     parameter RAM_INIT_FILE = ""
@@ -6,8 +9,14 @@ module miriscv_top #(
     input clk_i,
     input rst_n_i,
 
-    input  [`WORD_LEN-1:0] int_req_i,
-    output [`WORD_LEN-1:0] int_fin_o,
+    input  [`WORD_LEN-2:0] int_req_ext_i,  // INT 31 connected to PS/2 Keyboard valid data reg
+    output [`WORD_LEN-2:0] int_fin_ext_o,
+
+    output logic [`SEGMENTS_NUM-1:0] HEX_o,
+    output logic [  `DIGITS_NUM-1:0] DIG_o,
+
+    input logic ps2_clk_i,
+    input logic ps2_data_i,
 
     output core_prog_finished
 );
@@ -18,26 +27,14 @@ module miriscv_top #(
   logic [31:0] data_rdata_core;
   logic        data_req_core;
   logic        data_we_core;
-  logic [ 3:0] data_be_core;
-  logic [31:0] data_addr_core;
+  logic [31:0] data_addr;
   logic [31:0] data_wdata_core;
 
   logic [31:0] data_rdata_ram;
   logic        data_req_ram;
   logic        data_we_ram;
   logic [ 3:0] data_be_ram;
-  logic [31:0] data_addr_ram;
-  logic [31:0] data_wdata_ram;
-
-  logic        data_mem_valid;
-  assign data_mem_valid  = (data_addr_core >= RAM_SIZE) ? 1'b0 : 1'b1;
-
-  assign data_rdata_core = (data_mem_valid) ? data_rdata_ram : 1'b0;
-  assign data_req_ram    = (data_mem_valid) ? data_req_core : 1'b0;
-  assign data_we_ram     = data_we_core;
-  assign data_be_ram     = data_be_core;
-  assign data_addr_ram   = data_addr_core;
-  assign data_wdata_ram  = data_wdata_core;
+  logic [31:0] data_wdata;
 
   miriscv_core core (
       .clk_i(clk_i),
@@ -50,15 +47,37 @@ module miriscv_top #(
       .data_rdata_i(data_rdata_core),
       .data_req_o  (data_req_core),
       .data_we_o   (data_we_core),
-      .data_be_o   (data_be_core),
-      .data_addr_o (data_addr_core),
-      .data_wdata_o(data_wdata_core),
+      .data_be_o   (data_be_ram),
+      .data_addr_o (data_addr),
+      .data_wdata_o(data_wdata),
 
       .mcause_i(mcause),
       .INT(INT),
       .mie_o(mie),
       .INT_RST(INT_RST)
   );
+
+
+  logic [`RD_SEL_LEN-1:0] RDsel;
+  logic we_led;
+  logic we_keyboard;
+
+  addr_decoder #(
+      .RAM_SIZE(RAM_SIZE)
+  ) my_addr_dec (
+      .req_i (data_req_core),
+      .we_i  (data_we_core),
+      .addr_i(data_addr),
+
+      .RDsel_o(RDsel),
+
+      .req_m_o(data_req_ram),  //  memory control pins
+      .we_m_o (data_we_ram),
+
+      .we_d0_o(we_led),
+      .we_d1_o(we_keyboard)
+  );
+
 
   miriscv_ram #(
       .RAM_SIZE     (RAM_SIZE),
@@ -74,15 +93,62 @@ module miriscv_top #(
       .data_req_i  (data_req_ram),
       .data_we_i   (data_we_ram),
       .data_be_i   (data_be_ram),
-      .data_addr_i (data_addr_ram),
-      .data_wdata_i(data_wdata_ram)
+      .data_addr_i (data_addr),
+      .data_wdata_i(data_wdata)
   );
+
+  led_control led (
+      .clk_200_i(clk_i),
+      .wdata_i(data_wdata),
+      .addr_i(data_addr),  // byte addressable
+      .we_i(we_led),
+
+      .HEX_o(HEX_o),
+      .DIG_o(DIG_o)
+  );
+
+  logic keyboard_valid_data_int;
+
+  ps2_keyboard_control ps2_keyboard (
+      .clk_200_i(clk_i),
+
+      .wdata_i(data_wdata),
+      .addr_i(data_addr),  // byte addressable
+      .we_i(we_keyboard),
+
+      .ps2_clk_i (ps2_clk),
+      .ps2_data_i(ps2_data),
+
+      .valid_data_rst_i(int_fin_o[31]),
+
+      .data_o(data_rdata_keyboard),
+
+      .valid_data_int_o(keyboard_valid_data_int)
+  );
+
+  always_comb begin
+    case (RDsel)
+      `RDATA_MEM: begin
+        data_rdata_core <= data_rdata_ram;
+      end
+      `RDATA_KEYBOARD: begin
+        data_rdata_core <= data_rdata_keyboard;
+      end
+      default: begin
+      end
+    endcase
+
+  end
 
   logic INT_RST;
   logic [`WORD_LEN-1:0] mie;
   logic [`WORD_LEN-1:0] mcause;
   logic INT;
+  logic [`WORD_LEN-1:0] int_req_i;
+  assign int_req_i = {keyboard_valid_data_int, int_req_ext_i};
 
+  logic [`WORD_LEN-1:0] int_fin_o;
+  assign int_fin_ext_o = int_fin_o[`WORD_LEN-2:0];
   int_ctrl my_interrupt (
       .clk_i  (clk_i),
       .arstn_i(rst_n_i),
