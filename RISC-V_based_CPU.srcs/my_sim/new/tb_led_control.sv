@@ -47,7 +47,7 @@ module tb_led_control ();
   logic [`DIGITS_NUM-1:0] DIG;
 
   led_control dut (
-      .clk_i(clk),
+      .clk_200_i(clk),
       .wdata_i(wdata),
       .addr_i(addr),  // byte addressable
       .we_i(we),
