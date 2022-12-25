@@ -1,9 +1,12 @@
 `timescale 1ns / 1ps
 
-`define DEBUG_ON 1
+`define DEBUG_ON 0
 
 `define INT_LINE_5 5
 `define INT_LINE_19 19
+
+`define SEGMENTS_NUM 7
+`define DIGITS_NUM 8
 
 module tb_miriscv_top ();
 
@@ -22,8 +25,14 @@ module tb_miriscv_top ();
     #(HF_CYCLE);
   end
 
-  logic [`WORD_LEN-1:0] int_req;
-  logic [`WORD_LEN-1:0] int_fin;
+  logic [`WORD_LEN-2:0] int_req;  // INT 0 connected to PS/2 Keyboard valid data reg
+  logic [`WORD_LEN-2:0] int_fin;
+
+  logic [`SEGMENTS_NUM-1:0] HEX;
+  logic [`DIGITS_NUM-1:0] DIG;
+
+  logic ps2_clk;
+  logic ps2_data;
 
   logic prog_finished;
 
@@ -34,8 +43,14 @@ module tb_miriscv_top ();
       .clk_i  (clk),
       .rst_n_i(rst_n),
 
-      .int_req_i(int_req),
-      .int_fin_o(int_fin),
+      .int_req_ext_i(int_req),
+      .int_fin_ext_o(int_fin),
+
+      .HEX_o(HEX),
+      .DIG_o(DIG),
+
+      .ps2_clk_i (ps2_clk),
+      .ps2_data_i(ps2_data),
 
       .core_prog_finished(prog_finished)
   );
@@ -71,12 +86,12 @@ module tb_miriscv_top ();
         int_req[`INT_LINE_5] = 1'b0;
       end
 
-      if (!(i % 227)) begin
-        int_req[`INT_LINE_19] = 1'b1;
-        @(posedge int_fin[`INT_LINE_19]);
-        #(2 * HF_CYCLE);
-        int_req[`INT_LINE_19] = 1'b0;
-      end
+      // if (!(i % 227)) begin
+      //   int_req[`INT_LINE_19] = 1'b1;
+      //   @(posedge int_fin[`INT_LINE_19]);
+      //   #(2 * HF_CYCLE);
+      //   int_req[`INT_LINE_19] = 1'b0;
+      // end
       #(HF_CYCLE);
     end
     //clk = clk ? 0 : clk;  // Make last negedge to show last debug info

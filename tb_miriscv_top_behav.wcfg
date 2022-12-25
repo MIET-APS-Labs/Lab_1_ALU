@@ -12,15 +12,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="3075000000fs"></ZoomStartTime>
-      <ZoomEndTime time="3526000001fs"></ZoomEndTime>
-      <Cursor1Time time="3192500000fs"></Cursor1Time>
+      <ZoomStartTime time="115145893450fs"></ZoomStartTime>
+      <ZoomEndTime time="115946893451fs"></ZoomEndTime>
+      <Cursor1Time time="827500000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="198"></NameColumnWidth>
-      <ValueColumnWidth column_width="214"></ValueColumnWidth>
+      <ValueColumnWidth column_width="210"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="12" />
+   <WVObjectSize size="16" />
    <wvobject fp_name="/tb_miriscv_top/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -56,6 +56,56 @@
    <wvobject fp_name="/tb_miriscv_top/dut/core/main_decoder/illegal_instr_o" type="logic">
       <obj_property name="ElementShortName">illegal_instr_o</obj_property>
       <obj_property name="ObjectShortName">illegal_instr_o</obj_property>
+   </wvobject>
+   <wvobject fp_name="group288" type="group">
+      <obj_property name="label">LEDs</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_miriscv_top/dut/led/num_to_disp" type="array">
+         <obj_property name="ElementShortName">num_to_disp[31:0]</obj_property>
+         <obj_property name="ObjectShortName">num_to_disp[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top/dut/led/num_reg_1" type="array">
+         <obj_property name="ElementShortName">num_reg_1[31:0]</obj_property>
+         <obj_property name="ObjectShortName">num_reg_1[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top/dut/led/num_reg_2" type="array">
+         <obj_property name="ElementShortName">num_reg_2[31:0]</obj_property>
+         <obj_property name="ObjectShortName">num_reg_2[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top/dut/led/disp_on_off_reg" type="array">
+         <obj_property name="ElementShortName">disp_on_off_reg[31:0]</obj_property>
+         <obj_property name="ObjectShortName">disp_on_off_reg[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top/dut/led/mode_reg" type="array">
+         <obj_property name="ElementShortName">mode_reg[31:0]</obj_property>
+         <obj_property name="ObjectShortName">mode_reg[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top/dut/led/rst_reg" type="array">
+         <obj_property name="ElementShortName">rst_reg[31:0]</obj_property>
+         <obj_property name="ObjectShortName">rst_reg[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top/HEX" type="array">
+         <obj_property name="ElementShortName">HEX[6:0]</obj_property>
+         <obj_property name="ObjectShortName">HEX[6:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top/DIG" type="array">
+         <obj_property name="ElementShortName">DIG[7:0]</obj_property>
+         <obj_property name="ObjectShortName">DIG[7:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group289" type="group">
+      <obj_property name="label">PS/2</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_miriscv_top/ps2_clk" type="logic">
+         <obj_property name="ElementShortName">ps2_clk</obj_property>
+         <obj_property name="ObjectShortName">ps2_clk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top/ps2_data" type="logic">
+         <obj_property name="ElementShortName">ps2_data</obj_property>
+         <obj_property name="ObjectShortName">ps2_data</obj_property>
+      </wvobject>
    </wvobject>
    <wvobject fp_name="group237" type="group">
       <obj_property name="label">LSU</obj_property>
@@ -152,6 +202,7 @@
       <wvobject fp_name="group100" type="group">
          <obj_property name="label">CSR</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_miriscv_top/dut/core/my_csr/mie" type="array">
             <obj_property name="ElementShortName">mie[31:0]</obj_property>
             <obj_property name="ObjectShortName">mie[31:0]</obj_property>
@@ -193,7 +244,6 @@
    <wvobject fp_name="group119" type="group">
       <obj_property name="label">REGISTERS</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/tb_miriscv_top/dut/core/my_reg_file/adr1" type="array">
          <obj_property name="ElementShortName">adr1[4:0]</obj_property>
          <obj_property name="ObjectShortName">adr1[4:0]</obj_property>
@@ -222,10 +272,45 @@
          <obj_property name="ElementShortName">we3</obj_property>
          <obj_property name="ObjectShortName">we3</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_miriscv_top/dut/core/my_reg_file/RAM" type="array">
-         <obj_property name="ElementShortName">RAM[0:31][31:0]</obj_property>
-         <obj_property name="ObjectShortName">RAM[0:31][31:0]</obj_property>
-         <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject fp_name="group404" type="group">
+      <obj_property name="label">ADDR_DEC</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_miriscv_top/dut/my_addr_dec/req_i" type="logic">
+         <obj_property name="ElementShortName">req_i</obj_property>
+         <obj_property name="ObjectShortName">req_i</obj_property>
       </wvobject>
+      <wvobject fp_name="/tb_miriscv_top/dut/my_addr_dec/we_i" type="logic">
+         <obj_property name="ElementShortName">we_i</obj_property>
+         <obj_property name="ObjectShortName">we_i</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top/dut/my_addr_dec/addr_i" type="array">
+         <obj_property name="ElementShortName">addr_i[31:0]</obj_property>
+         <obj_property name="ObjectShortName">addr_i[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top/dut/my_addr_dec/RDsel_o" type="array">
+         <obj_property name="ElementShortName">RDsel_o[0:0]</obj_property>
+         <obj_property name="ObjectShortName">RDsel_o[0:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top/dut/my_addr_dec/req_m_o" type="logic">
+         <obj_property name="ElementShortName">req_m_o</obj_property>
+         <obj_property name="ObjectShortName">req_m_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top/dut/my_addr_dec/we_m_o" type="logic">
+         <obj_property name="ElementShortName">we_m_o</obj_property>
+         <obj_property name="ObjectShortName">we_m_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top/dut/my_addr_dec/we_d0_o" type="logic">
+         <obj_property name="ElementShortName">we_d0_o</obj_property>
+         <obj_property name="ObjectShortName">we_d0_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top/dut/my_addr_dec/we_d1_o" type="logic">
+         <obj_property name="ElementShortName">we_d1_o</obj_property>
+         <obj_property name="ObjectShortName">we_d1_o</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top/dut/core/my_reg_file/RAM" type="array">
+      <obj_property name="ElementShortName">RAM[0:31][31:0]</obj_property>
+      <obj_property name="ObjectShortName">RAM[0:31][31:0]</obj_property>
    </wvobject>
 </wave_config>
