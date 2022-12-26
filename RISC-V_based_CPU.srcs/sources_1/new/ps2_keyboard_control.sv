@@ -38,7 +38,7 @@ module ps2_keyboard_control (
 
   ps2_keyboard my_keyboard (
       .a_rst_i(rst_reg[0]),
-      .clk_50_i(clk_50),
+      .clk_200_i(clk_200_i),
       .ps2_clk_i(ps2_clk_i),
       .ps2_data_i(ps2_data_i),
       .valid_data_rst_i(valid_data_rst_i),
@@ -46,24 +46,6 @@ module ps2_keyboard_control (
       .valid_data_o(valid_data_int_o),
       .data_o(keyboard_data)
   );
-
-  // CLK divider 200 MHz -> 50 MHz
-  logic clk_50;
-  logic [2:0] clk_cntr_4;
-  parameter DIVISOR = 3'd4;
-  assign clk_50 = clk_cntr_4[2];
-  always_ff @(posedge clk_200_i) begin
-    if (rst_reg[0]) begin
-      clk_cntr_4 <= 2'b0;
-    end else begin
-      if (clk_cntr_4 >= DIVISOR) begin
-        clk_cntr_4 <= 2'b1;
-      end else begin
-        clk_cntr_4 <= clk_cntr_4 + 1;
-      end
-    end
-
-  end
 
   logic [`WORD_LEN-1:0] rst_reg;
 
@@ -87,6 +69,8 @@ module ps2_keyboard_control (
     if (!rst_reg[0]) begin
       if (addr_i == `C_KEY_CODE_REG) begin
         data_o <= {{(`WORD_LEN - `BYTE_WIDTH) {1'b0}}, keyboard_data};
+      end else begin
+        data_o <= `WORD_LEN'b0;
       end
     end
   end
