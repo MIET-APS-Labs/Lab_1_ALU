@@ -25,14 +25,29 @@ module tb_miriscv_top ();
     #(HF_CYCLE);
   end
 
+  logic ps2_clk;
+  logic ps2_data;
+  logic ps2_comm_start;
+  // PS/2 Clock
+  parameter PS2_CYCLE = 500;  // (10 KHz clock) -> 1 MHz for test
+  always begin
+    if (ps2_comm_start) begin
+      ps2_clk = 1'b1;
+      #(PS2_CYCLE);
+      ps2_clk = 1'b0;
+      #(PS2_CYCLE);
+    end else begin
+      ps2_clk = 1'b0;
+      #(HF_CYCLE);
+    end
+
+  end
+
   logic [`WORD_LEN-2:0] int_req;  // INT 0 connected to PS/2 Keyboard valid data reg
   logic [`WORD_LEN-2:0] int_fin;
 
   logic [`SEGMENTS_NUM-1:0] HEX;
   logic [`DIGITS_NUM-1:0] DIG;
-
-  logic ps2_clk;
-  logic ps2_data;
 
   logic prog_finished;
 
@@ -56,7 +71,8 @@ module tb_miriscv_top ();
   );
 
   logic program_started;
-
+  logic [`BYTE_WIDTH-1:0] ps2_data_tx = 8'h3a;
+  logic [`BYTE_WIDTH-1:0] release_key_code = 8'hF0;
   initial begin
 
     int i = 0;
@@ -86,12 +102,58 @@ module tb_miriscv_top ();
         int_req[`INT_LINE_5] = 1'b0;
       end
 
-      // if (!(i % 227)) begin
-      //   int_req[`INT_LINE_19] = 1'b1;
-      //   @(posedge int_fin[`INT_LINE_19]);
-      //   #(2 * HF_CYCLE);
-      //   int_req[`INT_LINE_19] = 1'b0;
-      // end
+      if (!(i % 227)) begin
+        // int_req[`INT_LINE_19] = 1'b1;
+        // @(posedge int_fin[`INT_LINE_19]);
+        // #(2 * HF_CYCLE);
+        // int_req[`INT_LINE_19] = 1'b0;
+
+        ps2_comm_start = 1'b1;
+        ps2_data = 1'b0;
+        @(negedge ps2_clk);
+        for (i = 0; i < `BYTE_WIDTH; i++) begin  // PRESS
+          @(posedge ps2_clk);
+          ps2_data = ps2_data_tx[i];
+        end
+        @(posedge ps2_clk);
+        ps2_data = ~(^ps2_data_tx);  // sending parity bit
+        @(posedge ps2_clk);
+        ps2_data = 1'b1;  // sending stop bit
+        @(posedge ps2_clk);
+        ps2_comm_start = 1'b0;
+
+        #(10 * PS2_CYCLE);
+
+        ps2_comm_start = 1'b1;
+        ps2_data = 1'b0;
+        @(negedge ps2_clk);
+        for (i = 0; i < `BYTE_WIDTH; i++) begin  //RELEASE KEY CODE
+          @(posedge ps2_clk);
+          ps2_data = release_key_code[i];
+        end
+        @(posedge ps2_clk);
+        ps2_data = ~(^release_key_code);  // sending parity bit
+        @(posedge ps2_clk);
+        ps2_data = 1'b1;
+        @(posedge ps2_clk);
+        #PS2_CYCLE;
+
+
+        ps2_data = 1'b0;
+        @(negedge ps2_clk);
+        for (i = 0; i < `BYTE_WIDTH; i++) begin  //RELEASE 
+          @(posedge ps2_clk);
+          ps2_data = ps2_data_tx[i];
+        end
+        @(posedge ps2_clk);
+        ps2_data = ~(^ps2_data_tx);  // sending parity bit
+        @(posedge ps2_clk);
+        ps2_data = 1'b1;  // sending stop bit
+        @(posedge ps2_clk);
+        ps2_comm_start = 1'b0;
+
+        #(10 * PS2_CYCLE);
+      end
       #(HF_CYCLE);
     end
     //clk = clk ? 0 : clk;  // Make last negedge to show last debug info
