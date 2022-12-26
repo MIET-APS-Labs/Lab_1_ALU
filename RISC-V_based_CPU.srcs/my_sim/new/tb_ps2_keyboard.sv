@@ -116,7 +116,7 @@ module tb_ps2_keyboard ();
       ps2_comm_start = 1'b1;
       ps2_data = 1'b0;
       @(negedge ps2_clk);
-      for (j = 0; j < `BYTE_WIDTH; j++) begin  //RELEASE
+      for (j = 0; j < `BYTE_WIDTH; j++) begin  //RELEASE KEY CODE
         @(posedge ps2_clk);
         ps2_data = release_key_code[j];
       end
@@ -130,7 +130,7 @@ module tb_ps2_keyboard ();
 
       ps2_data = 1'b0;
       @(negedge ps2_clk);
-      for (j = 0; j < `BYTE_WIDTH; j++) begin
+      for (j = 0; j < `BYTE_WIDTH; j++) begin  //RELEASE 
         @(posedge ps2_clk);
         ps2_data = ps2_data_tx[i][j];
       end
