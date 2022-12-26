@@ -116,9 +116,9 @@ module miriscv_top #(
       .addr_i(data_addr),  // byte addressable
       .we_i(we_keyboard),
 
-      .ps2_clk_i (ps2_clk),
-      .ps2_data_i(ps2_data),
-
+      .ps2_clk_i (ps2_clk_i),
+      .ps2_data_i(ps2_data_i),
+ 
       .valid_data_rst_i(int_fin_o[31]),
 
       .data_o(data_rdata_keyboard),
