@@ -5,21 +5,65 @@ module miriscv_top #(
     parameter RAM_SIZE      = 256,  // WORDS
     parameter RAM_INIT_FILE = ""
 ) (
+
+
+    input CLK100MHZ,
+
+    input [15:0] SW,
+
+    input PS2_CLK,
+    input PS2_DATA,
+
+    output [15:0] LED,
+
+    output [`SEGMENTS_NUM-1:0] C,
+    output [  `DIGITS_NUM-1:0] AN
+
     // clock, reset
-    input clk_i,
-    input rst_n_i,
+    // input clk_i,
+    // input rst_n_i,
 
-    input  [`WORD_LEN-2:0] int_req_ext_i,  // INT 31 connected to PS/2 Keyboard valid data reg
-    output [`WORD_LEN-2:0] int_fin_ext_o,
+    // input  [`WORD_LEN-2:0] int_req_ext_i,  // INT 31 connected to PS/2 Keyboard valid data reg
+    // output [`WORD_LEN-2:0] int_fin_ext_o,
 
-    output logic [`SEGMENTS_NUM-1:0] HEX_o,
-    output logic [  `DIGITS_NUM-1:0] DIG_o,
 
-    input logic ps2_clk_i,
-    input logic ps2_data_i,
+    // input logic ps2_clk_i,
+    // input logic ps2_data_i,
 
-    output core_prog_finished
+    // output core_prog_finished
 );
+
+
+  logic [`SEGMENTS_NUM-1:0] HEX_o;
+  logic [`DIGITS_NUM-1:0] DIG_o;
+
+  logic clk_i;
+  logic rst_n_i;
+
+  logic [`WORD_LEN-2:0] int_req_ext_i;  // INT 31 connected to PS/2 Keyboard valid data reg
+  logic [`WORD_LEN-2:0] int_fin_ext_o;
+
+  logic ps2_clk_i;
+  logic ps2_data_i;
+
+  logic core_prog_finished;
+
+  assign clk_i = CLK100MHZ;
+
+  assign C = HEX_o;
+  assign AN = DIG_o;
+
+  assign rst_n_i = SW[15];
+
+  assign int_req_ext_i[5] = SW[5];
+
+  assign LED[14:0] = int_fin_ext_o[14:0];
+  assign LED[15] = core_prog_finished;
+
+  assign ps2_clk_i = PS2_CLK;
+  assign ps2_data_i = PS2_DATA;
+
+
 
   logic [31:0] instr_rdata_core;
   logic [31:0] instr_addr_core;
@@ -118,7 +162,7 @@ module miriscv_top #(
 
       .ps2_clk_i (ps2_clk_i),
       .ps2_data_i(ps2_data_i),
- 
+
       .valid_data_rst_i(int_fin_o[31]),
 
       .data_o(data_rdata_keyboard),

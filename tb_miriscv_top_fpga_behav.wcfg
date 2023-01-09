@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_miriscv_top_fpga_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="\$unit_defines_riscv_v " />
+            <top_module name="glbl" />
+            <top_module name="tb_miriscv_top_fpga" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="12291500000fs"></ZoomStartTime>
+      <ZoomEndTime time="12811000001fs"></ZoomEndTime>
+      <Cursor1Time time="12555000000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="198"></NameColumnWidth>
+      <ValueColumnWidth column_width="77"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="10" />
+   <wvobject fp_name="/tb_miriscv_top_fpga/CLK100MHZ" type="logic">
+      <obj_property name="ElementShortName">CLK100MHZ</obj_property>
+      <obj_property name="ObjectShortName">CLK100MHZ</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top_fpga/dut/core/PC" type="array">
+      <obj_property name="ElementShortName">PC[31:0]</obj_property>
+      <obj_property name="ObjectShortName">PC[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top_fpga/program_started" type="logic">
+      <obj_property name="ElementShortName">program_started</obj_property>
+      <obj_property name="ObjectShortName">program_started</obj_property>
+   </wvobject>
+   <wvobject fp_name="group128" type="group">
+      <obj_property name="label">KEYBOARD</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_miriscv_top_fpga/ps2_comm_start" type="logic">
+         <obj_property name="ElementShortName">ps2_comm_start</obj_property>
+         <obj_property name="ObjectShortName">ps2_comm_start</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/ps2_data_tx" type="array">
+         <obj_property name="ElementShortName">ps2_data_tx[7:0]</obj_property>
+         <obj_property name="ObjectShortName">ps2_data_tx[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/release_key_code" type="array">
+         <obj_property name="ElementShortName">release_key_code[7:0]</obj_property>
+         <obj_property name="ObjectShortName">release_key_code[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="group129" type="group">
+         <obj_property name="label">PS/2</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_miriscv_top_fpga/PS2_CLK" type="logic">
+            <obj_property name="ElementShortName">PS2_CLK</obj_property>
+            <obj_property name="ObjectShortName">PS2_CLK</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_miriscv_top_fpga/PS2_DATA" type="logic">
+            <obj_property name="ElementShortName">PS2_DATA</obj_property>
+            <obj_property name="ObjectShortName">PS2_DATA</obj_property>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top_fpga/SW" type="array">
+      <obj_property name="ElementShortName">SW[15:0]</obj_property>
+      <obj_property name="ObjectShortName">SW[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top_fpga/LED" type="array">
+      <obj_property name="ElementShortName">LED[15:0]</obj_property>
+      <obj_property name="ObjectShortName">LED[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top_fpga/C" type="array">
+      <obj_property name="ElementShortName">C[6:0]</obj_property>
+      <obj_property name="ObjectShortName">C[6:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_miriscv_top_fpga/AN" type="array">
+      <obj_property name="ElementShortName">AN[7:0]</obj_property>
+      <obj_property name="ObjectShortName">AN[7:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject fp_name="group154" type="group">
+      <obj_property name="label">LED</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/led/clk_200_i" type="logic">
+         <obj_property name="ElementShortName">clk_200_i</obj_property>
+         <obj_property name="ObjectShortName">clk_200_i</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/led/wdata_i" type="array">
+         <obj_property name="ElementShortName">wdata_i[31:0]</obj_property>
+         <obj_property name="ObjectShortName">wdata_i[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/led/addr_i" type="array">
+         <obj_property name="ElementShortName">addr_i[4:0]</obj_property>
+         <obj_property name="ObjectShortName">addr_i[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/led/we_i" type="logic">
+         <obj_property name="ElementShortName">we_i</obj_property>
+         <obj_property name="ObjectShortName">we_i</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/led/HEX_o" type="array">
+         <obj_property name="ElementShortName">HEX_o[6:0]</obj_property>
+         <obj_property name="ObjectShortName">HEX_o[6:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/led/DIG_o" type="array">
+         <obj_property name="ElementShortName">DIG_o[7:0]</obj_property>
+         <obj_property name="ObjectShortName">DIG_o[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/led/num_reg_1" type="array">
+         <obj_property name="ElementShortName">num_reg_1[31:0]</obj_property>
+         <obj_property name="ObjectShortName">num_reg_1[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/led/num_reg_2" type="array">
+         <obj_property name="ElementShortName">num_reg_2[31:0]</obj_property>
+         <obj_property name="ObjectShortName">num_reg_2[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/led/disp_on_off_reg" type="array">
+         <obj_property name="ElementShortName">disp_on_off_reg[31:0]</obj_property>
+         <obj_property name="ObjectShortName">disp_on_off_reg[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/led/mode_reg" type="array">
+         <obj_property name="ElementShortName">mode_reg[31:0]</obj_property>
+         <obj_property name="ObjectShortName">mode_reg[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/led/rst_reg" type="array">
+         <obj_property name="ElementShortName">rst_reg[31:0]</obj_property>
+         <obj_property name="ObjectShortName">rst_reg[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/led/num_to_disp" type="array">
+         <obj_property name="ElementShortName">num_to_disp[31:0]</obj_property>
+         <obj_property name="ObjectShortName">num_to_disp[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/led/dig_to_disp" type="array">
+         <obj_property name="ElementShortName">dig_to_disp[7:0]</obj_property>
+         <obj_property name="ObjectShortName">dig_to_disp[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/led/disp_rst" type="logic">
+         <obj_property name="ElementShortName">disp_rst</obj_property>
+         <obj_property name="ObjectShortName">disp_rst</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/led/clk_cntr" type="array">
+         <obj_property name="ElementShortName">clk_cntr[25:0]</obj_property>
+         <obj_property name="ObjectShortName">clk_cntr[25:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/led/prescaled_clk" type="logic">
+         <obj_property name="ElementShortName">prescaled_clk</obj_property>
+         <obj_property name="ObjectShortName">prescaled_clk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/ram/RAM" type="array">
+         <obj_property name="ElementShortName">RAM[0:255][31:0]</obj_property>
+         <obj_property name="ObjectShortName">RAM[0:255][31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/core/my_reg_file/RAM" type="array">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">RAM[0:31][31:0]</obj_property>
+         <obj_property name="ObjectShortName">RAM[0:31][31:0]</obj_property>
+         <obj_property name="label">REGS[0:31][31:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group177" type="group">
+      <obj_property name="label">INT</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/my_interrupt/INT" type="logic">
+         <obj_property name="ElementShortName">INT</obj_property>
+         <obj_property name="ObjectShortName">INT</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/my_interrupt/int_fin" type="array">
+         <obj_property name="ElementShortName">int_fin[31:0]</obj_property>
+         <obj_property name="ObjectShortName">int_fin[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/my_interrupt/int_req" type="array">
+         <obj_property name="ElementShortName">int_req[31:0]</obj_property>
+         <obj_property name="ObjectShortName">int_req[31:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/my_interrupt/mie_i" type="array">
+         <obj_property name="ElementShortName">mie_i[31:0]</obj_property>
+         <obj_property name="ObjectShortName">mie_i[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_miriscv_top_fpga/dut/my_interrupt/INT_RST" type="logic">
+         <obj_property name="ElementShortName">INT_RST</obj_property>
+         <obj_property name="ObjectShortName">INT_RST</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>

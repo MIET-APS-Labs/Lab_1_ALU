@@ -13,18 +13,21 @@ module ps2_keyboard (
 );
 
   // CLK divider 200 MHz -> 50 MHz
+  // CLK divider 100 MHz -> 50 MHz for test on FPGA
   logic clk_50;
-  logic [2:0] clk_cntr_4;
-  parameter DIVISOR = 3'd4;
-  assign clk_50 = clk_cntr_4[2];
+  //logic [2:0] clk_cntr_4;
+  logic [1:0] clk_cntr_2;
+  //parameter DIVISOR = 3'd4;
+  parameter DIVISOR = 3'd2;
+  assign clk_50 = clk_cntr_2[1];
   always_ff @(posedge clk_200_i) begin
     if (a_rst_i) begin
-      clk_cntr_4 <= 2'b0;
+      clk_cntr_2 <= 2'b0;
     end else begin
-      if (clk_cntr_4 >= DIVISOR) begin
-        clk_cntr_4 <= 2'b1;
+      if (clk_cntr_2 >= DIVISOR) begin
+        clk_cntr_2 <= 2'b1;
       end else begin
-        clk_cntr_4 <= clk_cntr_4 + 1;
+        clk_cntr_2 <= clk_cntr_2 + 1;
       end
     end
   end

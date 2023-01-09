@@ -34,8 +34,8 @@
 `define C_MODE_REG `ADDR_LEN'h0C
 `define C_RST_REG `ADDR_LEN'h10
 
-//`define CLK_DIV 100000000
-`define CLK_DIV 10
+`define CLK_DIV 100000000 // for test on FPGA
+//`define CLK_DIV 10
 
 module led_control (
     input clk_200_i,

@@ -12,12 +12,12 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="11425500000fs"></ZoomStartTime>
-      <ZoomEndTime time="11938500001fs"></ZoomEndTime>
-      <Cursor1Time time="11487500000fs"></Cursor1Time>
+      <ZoomStartTime time="193567000fs"></ZoomStartTime>
+      <ZoomEndTime time="268967001fs"></ZoomEndTime>
+      <Cursor1Time time="202500000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="198"></NameColumnWidth>
+      <NameColumnWidth column_width="192"></NameColumnWidth>
       <ValueColumnWidth column_width="90"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="16" />
@@ -60,6 +60,11 @@
    <wvobject fp_name="group121" type="group">
       <obj_property name="label">KEYBOARD</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_miriscv_top/dut/ps2_keyboard/my_keyboard/clk_50" type="logic">
+         <obj_property name="ElementShortName">clk_50</obj_property>
+         <obj_property name="ObjectShortName">clk_50</obj_property>
+      </wvobject>
       <wvobject fp_name="/tb_miriscv_top/dut/ps2_keyboard/we_i" type="logic">
          <obj_property name="ElementShortName">we_i</obj_property>
          <obj_property name="ObjectShortName">we_i</obj_property>
